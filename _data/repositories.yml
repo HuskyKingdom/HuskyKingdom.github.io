@@ -1,12 +1,9 @@
 github_users:
-  - torvalds
-  - alshedivat
+  - HuskyKingdom
+
 
 github_repos:
-  - alshedivat/al-folio
-  - twbs/bootstrap
-  - jekyll/jekyll
-  - jquery/jquery
-  - FortAwesome/Font-Awesome
-  - jpswalsh/academicons
-  - mathjax/MathJax
+  - HuskyKingdom/DITA_acml2023
+  - HuskyKingdom/DDQN
+
+
