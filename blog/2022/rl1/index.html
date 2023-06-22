@@ -1,1 +1,641 @@
-<!DOCTYPE html> <html lang="en"> <head> <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> <meta http-equiv="X-UA-Compatible" content="IE=edge"> <title>Reinforcement Learning Basics | Yuhang Song | BLOG</title> <meta name="author" content="Yuhang Song"> <meta name="description" content="Reinforcement Learning Note. [Model-based | Model-free Value-based | Model-free Policy-based | AC | Continuous Action Space]"> <meta name="keywords" content="jekyll, jekyll-theme, academic-website, portfolio-website"> <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-DF7Zhf293AJxJNTmh5zhoYYIMs2oXitRfBjY+9L//AY=" crossorigin="anonymous"> <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/css/mdb.min.css" integrity="sha256-jpjYvU3G3N6nrrBwXJoVEYI/0zw8htfFnhT9ljN3JJw=" crossorigin="anonymous"> <link defer rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.4/dist/bootstrap-table.min.css"> <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous"> <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/academicons@1.9.1/css/academicons.min.css" integrity="sha256-i1+4qU2G2860dGGIOJscdC30s9beBXjFfzjWLjBRsBg=" crossorigin="anonymous"> <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:100,300,400,500,700|Material+Icons"> <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jwarby/jekyll-pygments-themes@master/github.css" media="" id="highlight_theme_light"> <link href="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.css" rel="stylesheet"> <link rel="shortcut icon" href="data:image/svg+xml,&lt;svg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22&gt;&lt;text%20y=%22.9em%22%20font-size=%2290%22&gt;%E2%9A%9B%EF%B8%8F&lt;/text&gt;&lt;/svg&gt;"> <link rel="stylesheet" href="/assets/css/main.css"> <link rel="canonical" href="https://huskykingdom.github.io/blog/2022/rl1/"> <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jwarby/jekyll-pygments-themes@master/native.css" media="none" id="highlight_theme_dark"> <script src="/assets/js/theme.js"></script> <script src="/assets/js/dark_mode.js"></script> </head> <body class="fixed-top-nav "> <header> <nav id="navbar" class="navbar navbar-light navbar-expand-sm fixed-top"> <div class="container"> <a class="navbar-brand title font-weight-lighter" href="/">Yuhang Song | BLOG</a> <button class="navbar-toggler collapsed ml-auto" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"> <span class="sr-only">Toggle navigation</span> <span class="icon-bar top-bar"></span> <span class="icon-bar middle-bar"></span> <span class="icon-bar bottom-bar"></span> </button> <div class="collapse navbar-collapse text-right" id="navbarNav"> <ul class="navbar-nav ml-auto flex-nowrap"> <li class="nav-item "> <a class="nav-link" href="/">About</a> </li> <li class="nav-item active"> <a class="nav-link" href="/blog/">Blog<span class="sr-only">(current)</span></a> </li> <li class="nav-item "> <a class="nav-link" href="/publications/">Publications</a> </li> <li class="nav-item "> <a class="nav-link" href="/projects/">Projects</a> </li> <li class="nav-item "> <a class="nav-link" href="/cv/">Curriculum Vitae</a> </li> <li class="toggle-container"> <button id="light-toggle" title="Change theme"> <i class="fas fa-moon"></i> <i class="fas fa-sun"></i> </button> </li> </ul> </div> </div> </nav> <progress id="progress" value="0"> <div class="progress-container"> <span class="progress-bar"></span> </div> </progress> </header> <div class="container mt-5"> <div class="row"> <div class="col-sm-3"> <nav id="toc-sidebar" class="sticky-top"></nav> </div> <div class="col-sm-9"> <div class="post"> <header class="post-header"> <h1 class="post-title">Reinforcement Learning Basics</h1> <p class="post-meta">October 30, 2022</p> <p class="post-tags"> <a href="/blog/2022"> <i class="fas fa-calendar fa-sm"></i> 2022 </a>   ·   <a href="/blog/category/studynote"> <i class="fas fa-tag fa-sm"></i> studynote</a>   </p> </header> <article class="post-content"> <div id="markdown-content"> <p>Download full version of this notes with more details and images <a href="">here</a>.</p> <h1 id="reinforcement-learning">Reinforcement Learning</h1> <h2 id="model-based-rl-dynamic-programming"><strong>Model-based RL: Dynamic Programming</strong></h2> <p>In MDP, we want to model the state value function and state-action value functions, besed on which, we can form a strategy that greedly select actions with max state-action value in for each individual state.</p> <p>We define state value function \(v_\pi\) and stage-action value function \(q_\pi\) for a certain policy \(\pi\) as following:</p> \[q_\pi(s,a) = \mathbb{E}_{\tau \backsim \pi}[R(\tau) | S_0=s, A_0=a] \\ v_\pi(s) = \mathbb{E}_{a \backsim \tau}[q_\pi(s,a)]\] <p>The Bellman Expectation Functions provids us a way to iteratively calculate value functions by decompose them into immediate reward plus discounted value of successor state.</p> \[v_\pi(s) = \mathbb{E}_\pi[R_{t+1} + \gamma v_\pi(S_{t+1}) | S_t = s] \\ q_\pi(s,a) = \mathbb{E}_\pi[R_{t+1}+\gamma q_\pi(S_{t+1},A_{t+1} | S_t=s,A_t=a)]\] <p>The Bellman Equations can be solved directly if we have full information of the environment(i.e. we know the state transformation function), in discrete finite state environment: \(v = r + \gamma Pv\)</p> <p>From which \(v\) and \(r\) are scalars, \(P\) is state transform probability matrix. Solve it directly we get:</p> \[v = (I-\gamma P)^{-1}r\] <p>The Bellman Optimally Equation can be then written as:</p> \[v_*(s) = max_{a}\mathbb{E}[R_s^a + \gamma v_*(s')] = max_{a} R_s^a + \gamma \sum_{s' \in S} p_{ss'}^a v_*(s') \\ q_*(s,a) = R_s^a + \gamma \mathbb{E}[max_{a'} q_*(s',a')] = R_s^a + \gamma \sum_{s' \in S} p_{ss'}^a max_{a'} q_*(s',a')\] <p>The complexity of solving Bellman Expectation equation is \(O(n^3)\), where \(n\) is the number of states, that means it is hard to solve when having large state space. In such case, we need to use methods like Dynamic Programming, Monte-Carlo Estimation, or Temporal Difference. In other hand, Bellman Optimalityt Equations are non-linear, and has no closed form solution(in general), therefore cannot be directly solved, we need to use other methods.</p> <p>Dynamic Programming iteratively solves large scale questions by decomposite them into smaller ones, those questions have to be:</p> <ul> <li>With Optimal Substructure</li> <li>Overlapping Subproblems</li> </ul> <p>MDP satisfy both propeerties. We can therefore use DP to solve MDP questions, <strong>note that DP solutions requires Full Knowledge of the MDP, and are hence Model-Based RL methods.</strong></p> <h3 id="policy-iteration">Policy Iteration</h3> <p>Policy Iteration method evaluate a given policy \(\pi\) by dynamic programming, it iteratively use Bellman Expectations to evaluate the state function of given policy \(\pi\). Specifically for each iteration \(k\):</p> \[v_{k+1}(s) = \sum_{a \in A} \pi(a|s) (R_s^a + \gamma \sum_{s' \in S} P_{ss'}^a v_k(s'))\] <p>To improve the policy, acting greedily with respect to \(v_\pi\): \(\pi' = greedy(v_\pi) = argmax_{a \in A} \ q_\pi(s,a)\)</p> <p>The algorithm converges to \(v_*(s)\) with greedy policy imrovement, otherwise converges to real \(v_\pi(s)\).</p> <h3 id="value-iteration">Value Iteration</h3> <p>Based on Principle of Optimality, which states a policy \(\pi(s)\) is an optimal policy on state \(s\) if and only if \(\pi(s)\) achives \(v_\pi(s') = v_*(s')\) for any state \(s'\) that is reachable from \(s\). From which, it implies if we know the solution of \(v_*(s')\), we can figure out the optimal solution to any state \(s\) by <strong>One-Step Full Backup</strong>.</p> <p>Formally, if we know the solution to subproblems \(v_*(s')\), the solution \(v_*(s)\) can be found be one-step lookahead:</p> \[v_*(s) = max_{a \in A} R_s^a + \gamma \sum_{s' \in S} p_{ss'}^a v_*(s')\] <p>The algorithm converges to \(v_*(s)\).</p> <p>In summery:</p> <table> <thead> <tr> <th>Problem</th> <th>Bellman Equation</th> <th>Method (Algorithm)</th> </tr> </thead> <tbody> <tr> <td>Value Function Prediction</td> <td>Bellman Expectation Equation</td> <td>Policy Iteration</td> </tr> <tr> <td>Control</td> <td>Bellman Expectation Equation</td> <td>Policy Iteration + Greedy Policy Improvement</td> </tr> <tr> <td>Control</td> <td>Bellman Optimality Equation</td> <td>Value Iteration</td> </tr> </tbody> </table> <h3 id="asynchronous-dynamic-programming">Asynchronous Dynamic Programming</h3> <p>DP methods described above used synchronous backups, where all states are backed up in parallel. Asynchronous DP backs up states individually, in any order, can significantly reduce computation. It is guaranteed to converge if all states continue to be selected.</p> <p>Three simple ideas for asynchronous dynamic programming:</p> <ul> <li>In-place dynamic programming</li> <li>Prioritised sweeping</li> <li>Real-time dynamic programming</li> </ul> <p><br></p> <h2 id="model-free-value-based-methods"><strong>Model-free Value-based Methods</strong></h2> <p>Dynamic Programming RL methods are all model based methods, in which we need specific environment model to excute them, it is common in real-world RL environment that we dont know environment model, Monte-Carlo / Temporal Difference methods provided algorithms that are model-free to predict value functions.</p> <h3 id="monte-carlo">Monte-Carlo</h3> <p>Monte-Carlo(MC) methods learn directly from episodes of experience, instead of evaluate policy by expected return(based on environment knowledge), it uses mean return(based on empirical knowledge) to estimate the value function.</p> <p>The basic idea is, to evaluate state value for \(s\), the firstt/every time \(t\) when state \(s\) is visited in an episode, increment counter \(N(s) \leftarrow N(s) +1\), increment total return \(S(s) \leftarrow S(s) + G_t\), the estimated state value can be calculated as:</p> \[V(s) = \frac{S(s)}{N(s)}\] <p>By law of large numbers, \(V(s) \rightarrow v_\pi(s)\) as \(N(s) \rightarrow \infty\).</p> <p>By incremental MC updates, the final MC evaluation equation can be written as:</p> \[V(s_t) \leftarrow V(S_t) + \alpha (G_t - V(S_t))\] <h3 id="temporal-difference">Temporal Difference</h3> <p>Temporal Difference(TD) method learns from incomplete eepisodes, in which the agent do not have to wait until finish whole episode to update value function, like did in MC. TD updates value function by leverage the differences between target and estimation in different time step. It uses idea of <strong>Bootstrapping</strong> with a biased estimation. Less precise than MC, but more convinent and with lower variance.</p> <p>In Monte-Carlo methods, the value function is updated by:</p> \[V(s_t) \leftarrow V(S_t) + \alpha (G_t - V(S_t))\] <p>Alternatively in TD method, we update value of \(V(S_t)\) towards estimated return \(R_{t+1} + \gamma V(S_{t+1})\):</p> \[V(s_t) \leftarrow V(S_t) + \alpha ([R_{t+1} + \gamma V(S_{t+1})] - V(S_t))\] <p>Where \(R_{t+1} + \gamma V(S_{t+1})\) called <em>TD target</em>, and \(\delta_t = R_{t+1} + \gamma V(S_{t+1}) - V(S_t)\) called <em>TD error</em>.</p> <p>TD can learn before(or without) knowing the final outcome, whereas in order for MC to learn, we need to wait until the termination of the episode which only works in episodic environments.</p> <h3 id="on-policy-value-based-controls">On-Policy Value-based Controls</h3> <p><strong>MC based: Greedy Policy Improvements</strong></p> <p>Evaluate state-action value functions \(q_\pi(s,a)\) instead of state value function \(v_\pi(s)\):</p> \[q(s_t,a_t) \leftarrow q(s_t,a_t) + \alpha (G_t - q(s_t,a_t))\] <p>Improve policy by \(\epsilon\)-greedily selecting \(q(s,a)\).</p> <p><strong>TD based: Sarsa</strong></p> <p>Sarsa algorithm, replace MC by TD in control loop:</p> \[q(s_t,a_t) \leftarrow q(s_t,a_t) + \alpha (R + \gamma q(s_{t+1},a_{t+1}) - q(s_t,a_t))\] <h3 id="off-policy-value-based-controls">Off-Policy Value-based Controls</h3> <p>Objective:</p> <ul> <li>Learn from observing humans or other agents.</li> <li>Re-use experience generated from old policies \(\pi_1;\pi_2,....,\pi_{t-1}\).</li> <li>Learn about optimal policy while following exploratory policy.</li> <li>Learn about multiple policies while following one policy.</li> </ul> <p><strong>MC based: Importance Sampling</strong></p> <p>Gater trajectories from another policy distribution to update current distribution using a trick namely:</p> <p>[Importance Sampling]</p> <p>Estimate the expectation of distribution Q from P:</p> \[\mathbb{E}_{X \backsim P}[f(x)] = \sum P(x) f(x) = \sum Q(x) \frac{P(x)}{Q(x)} f(x) = \mathbb{E}_{X \backsim Q}[\frac{P(x)}{Q(x)}f(x)]\] <p>Define \(G_t^{\pi/\mu} = \frac{\pi(A_t|S_t)}{\mu(A_t|S_t)} \frac{\pi(A_{t+1}|S_{t+1})}{\mu(A_{t+1}|S_{t+1})} ... \frac{\pi(A_T|S_T)}{\mu(A_T|S_T)} G_t\), update value towards corrected return: \(V(S_t) \leftarrow V(S_t) + \alpha(G_t^{\pi/\mu} - V(S_t))\)</p> <p>Note that importance sampling can dramatically increase variance. This mechanism can also be applied to TD:</p> \[V(S_t) \leftarrow V(S_t) + \alpha( \frac{\pi(A_t|S_t)}{\mu(A_t|S_t)} (R_{t+1} + \gamma V(S_{t+1})) - V(S_t))\] <p><strong>TD based: Q-Learning</strong></p> <p>Instead of using target value based on current policy \(\pi\), the target value in Q-Learning beased on greedy policy over state-action value function:</p> \[q(s_t,a_t) \leftarrow q(s_t,a_t) + \alpha (R + \gamma \ max_a q(s_{t+1},a) - q(s_t,a_t))\] <p><br></p> <h2 id="model-free-policy-based-methods"><strong>Model-free Policy Based methods</strong></h2> <p>Advantages:</p> <ul> <li>Better convergence properties.</li> <li>Effective in high-dimensional or continuous action spaces.</li> <li>Can learn stochastic policies.</li> </ul> <p>Disadvantages:</p> <ul> <li>Typically converge to a local rather than global optimum.</li> <li>Evaluating a policy is typically inefficient and high variance.</li> </ul> <h3 id="gradient-based-policy-gradient">Gradient Based: Policy Gradient</h3> <p>Define that in a MDP environment, total reward gain from a certain policy \(\pi\) can be shown as:</p> \[\bar{R}_\theta = \sum_\tau R(\tau)p_\theta(\tau) \ \ \ _{(1)} \\ where \ \ p_\theta = p(s_1) \prod_{t=1}^{T} p_\theta(a_t \ given \ s_t) p(s_{t+1}|s_t,a_t) \ \ \ _{(2)}\] <p>In which policy \(\pi\) is parameterised by \(\theta\), and \(\tau\) represents a single trajectory, \(p_\theta\) is the probability of the trajectory.</p> <p>Since equation (1) involves reward of trajectory \(R(\tau)\) times the probability of trajectory \(\tau\) following policy \(\theta\), noted as \(p_\theta\), as well as the summing operation \(\sum_\tau\), it can be seen as the expectation of reward for a certain policy:</p> \[\mathbb{E}_{\tau \backsim p_\theta(\tau)}[R(\tau)]\] <p>Hence we want to maximize the expectation of reward for a certain policy, to achive this, calculate the gradient of the function and perform gredient acsent:</p> \[\begin{aligned} \nabla_\theta \mathbb{E}_{\tau \backsim p_\theta(\tau)}[R(\tau)] = \nabla_\theta \int_{\tau_t} R_t \ p_\theta(\tau_t) \ \ d\tau_t \\ = \int_{\tau_t} R_t \ \nabla_\theta \ p_\theta (\tau_t) \ \ d\tau_t \\ = \int_{\tau_t} R_t \ p_\theta(\tau_t) \ \nabla_\theta \ log p_\theta (\tau_t) \ \ d\tau_t \\ = \mathbb{E}_{\tau \backsim p_\theta(\tau)}[R_t \ \nabla_\theta \ log p_\theta (\tau_t)] \end{aligned}\] <p>\(\mathbb{E}_{\tau \backsim p_\theta(\tau)}[R_t \ \nabla_\theta \ log p_\theta (\tau_t)]\) can be approximated by collecting experience as much as possible and compute the average:</p> \[\mathbb{E}_{\tau \backsim p_\theta(\tau)}[R(\tau) \ \nabla_\theta \ log p_\theta (\tau)] \approx \frac{1}{N} \sum_{n=1}^N R(\tau^n) \ \nabla_\theta \ log p_\theta (\tau^n)\] <p>Since we dont have full model for \(p_\theta\), it is not possible to compute equation (2), that is, we dont know \(p(s_{t+1} \ given \ s_t,a_t)\), because this term depends on the environment. Here for gradient acsent with respect to \(\theta\), we only need \(\nabla log \ p_\theta(\tau_t)\) instead of the value of \(log \ p_\theta(\tau_t)\) itself, therefore simply replace \(p_\theta(\tau_t)\) by \(\pi_\theta(a_t \ given \ s_t)\) we get:</p> \[\mathbb{E}_{\tau \backsim p_\theta(\tau)}[R(\tau) \ \nabla_\theta \ \sum_{t=1}^{T_n} log \ \pi_\theta(a_t | s_t)] \approx \frac{1}{N} \sum_{n=1}^N \sum_{t=1}^{T_n} R(\tau^n) \ \nabla_\theta \ log \ \pi_\theta(a_t^n \ given \ s_t^n)\] <p>After obtaining the gradient of objective function, policy parameters \(\theta\) are updated by gradient acsent:</p> \[\theta \leftarrow \theta + \alpha \nabla \bar{R}_\theta \\ where \ \ \nabla \bar{R}_\theta = \frac{1}{N} \sum_{n=1}^N \sum_{t=1}^{T_n} R(\tau^n) \ \nabla_\theta \ log \ \pi_\theta(a_t^n \ given \ s_t^n)\] <p><strong>Tips1-Add a Baseline</strong></p> <p>It is possible that in a specific reinforcement learning environment, that \(R(\tau^n)\) is always positive. In this case, we might monotoniclly increase the probability of a certain action, this can be solved by adding a baseline to our equation, so that instead of naively taking rewards feedback from environment, we compare it to the average rewards we have and make the reward be relative to all previous rewards:</p> \[\nabla \bar{R}_\theta = \frac{1}{N} \sum_{n=1}^N \sum_{t=1}^{T_n} (R(\tau^n)-b) \ \nabla_\theta \ log \ \pi_\theta(a_t^n | s_t^n) \\ where \ \ b \approx \mathbb{E}[R(\tau)]\] <p>In other words, instead of rewarding trajectory by only the environment rewards, we reward a trajectory by how looking at how good this trajectory is, comparing with all other collected trajectories, since all actions in a same trajectory are being weighted by same reward, yet those actions might benefits for different amount.</p> <p>To address this, we weight the \(a_t\) by the reward obtained from time \(t\), add a discount factor to rewards obtained in later stages.</p> \[\nabla \bar{R}_\theta = \frac{1}{N} \sum_{n=1}^N \sum_{t=1}^{T_n} ([\sum_{t^` = t}^{T_n} \gamma^{(t^`-t)} \cdot r_{t^`}^n ] -b) \ \nabla_\theta \ log \ \pi_\theta(a_t^n | s_t^n) \\ where \ \ b \approx \mathbb{E}[R(\tau)]\] <p><strong>Tips2-Assign Suitable Credit</strong></p> <p>The current version of objective function evaluates the whole trajectory by the total rewards obtained from the environment, it is reasonable, but assumes in-precise correlations between each actions in the trajectory.</p> <p><br></p> <h2 id="actor-critic-integrating-value-based--policy-based"><strong>Actor-Critic: Integrating Value-based &amp; Policy-based</strong></h2> <p>The above PG(Policy Gradient) algorithm is evaluating the policy by MC-style critic(i.e. mean expected reward returned by the environment), in Actor-Critic, we define a critic:</p> \[Q_w(s,a) \approx Q^{\pi_\theta}(s,a)\] <p>Where the critic approximates state-action value function \(Q(s,a)\), the actor approximates the policy \(\pi\), there are parameterized by \(w\) and \(\theta\) respectively.</p> <p>Actor-critic algorithm follow an approximate policy gradient, the actor network can be updated by:</p> \[\nabla_\theta J(\theta) \approx \mathbb{E}_{\pi_\theta}[\nabla_\theta log \pi_\theta(s,a) Q_w(s,a)] \\ \nabla \theta = \alpha \nabla_\theta log \pi_\theta(s,a) Q_w(s,a) \\ \theta_{t+1} \leftarrow \theta_t + \lambda \nabla\theta_t\] <p>The critic network is based on critic functions, here use Q-function as an example, the critic network can be updated as:</p> \[\nabla_w J(w) \approx \mathbb{E}_{\pi_\theta}[MSE(Q_{t},R_{t+1}+max_a Q_{t+1})] \\ \nabla w = MSE(Q_{t},R_{t+1}+max_a Q_{t+1}) \\ w_{t+1} \leftarrow w_t + \lambda \nabla w_t\] <p>Instead of leting critic to estimate state-value function, we can allow it to alternatively estimates Advantage function \(A(s,a) = Q_w(s,a) - V_v(s)\) to reduce the variance. There are many alternative critic function choices.</p> <p><br></p> <h2 id="continuous-action-space"><strong>Continuous Action Space</strong></h2> <p>Methods proposed so far only solves for environments that are with discrete action space, so that value functions for each actions or the probability distribution of selecting actions could be computed. However, in real world, most of the problem are with continous action space.</p> <h3 id="deep-derministic-policy-gradient">Deep Derministic Policy Gradient</h3> <p>Deep Derministic Policy Gradient is then proposed, it is able to solve RL environments with continuous action space by integrating ideas of DQN and PG. It can be viewed as extended version of DQN that is able to solve problems with continous action space. DDPG algorithm uses Actor-Critic architecture.</p> <p>In DQN, in order to evaluate value function, we need \(max_aQ_{t+1}\), it is not possible to compute such value in continous action space. Instead of inputing only the state into critic network and obtain the Q-values for all actions, DDPG critic network takes next action computed from actor network as well, and evaluate Q value for this certain action. Updating of DDPG critic network is the same to DQN:</p> \[\nabla_w J(w) \approx \mathbb{E}_{\pi_\theta}[MSE(Q_{t},R_{t+1}+ Q_{t+1}^{a \backsim Actor})] \\ \nabla w = MSE(Q_{t},R_{t+1}+Q_{t+1}^{a \backsim Actor}) \\ w_{t+1} \leftarrow w_t - \lambda \nabla w_t\] <p>Intuitively, in DDPG, the actor network performs differently as the one in PG, it is not possible for it to compute probalibity distributions for all actions in continous action space, therefore we alter the network to output a certain action that could be with max Q value. The target of the actor network in DDPG is to maximize the value of \(Q_t(s,a)\) evaluated by critic network, therefore to update actor network, we use gradient acsent:</p> \[pg = \frac{\partial Q(s,\pi(s;\theta),w)}{\partial \theta} = \frac{\partial Q(s,a,w)}{\partial a} \cdot \frac{\partial a}{\partial \theta} \\ \theta \leftarrow \theta + \bar{\lambda} \theta\] <p>Note that in DDPG, tricks like target networks for both AC networks; memory buffer are being used. We also add a environmental noise \(N\) when performing actions to allow exploration, as well as off-policy learning.</p> <h3 id="proximal-policy-optimization">Proximal Policy Optimization</h3> <p>Baseline algorithm of OpenAI. PPO allows off-policy learning to policy gradient algorithm. In policy gradient, we update our policy network by compute gradient of the expected reward function with respect to policy parameters \(\theta\), and perform gradient acsent to maximize it:</p> \[\nabla \bar{R}_\theta = \frac{1}{N} \sum_{n=1}^N \sum_{t=1}^{T_n} R(\tau^n) \ \nabla_\theta \ log \ \pi_\theta(a_t^n | s_t^n) \\ = \mathbb{E}_{\tau \backsim \pi_\theta}[R(\tau^n) \ \nabla_\theta \ log \ \pi_\theta(a_t^n | s_t^n)] \\ \theta \leftarrow \theta + \alpha \nabla \bar{R}_\theta\] <p>In PPO algorithm, instead of sampling trajectories from policy \(\pi_\theta\), in order to increase sample efficiency(reuse expirence), we sample trajectories from another policy \(\pi_{\theta'}\) and apply a importance sampling method to correct the difference.</p> \[\nabla \bar{R_\theta} = \mathbb{E}_{\tau \backsim \pi_{\theta'}}[\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta'}(a_t|s_t)} R(\tau^n) \ \nabla_\theta \ log \ \pi_\theta(a_t^n given s_t^n)]\] <p>In addition, we need to add a regularzation term (or in TRPO, add a constrain) to the objective function to constrain the difference between two distributions, therefore the objective function becomes:</p> <p>\(J(\theta) = J_{\theta'}(\theta) - \beta KL(\theta,\theta')\) Where adaptively set the value of \(\beta\), specificlly when \(KL(\theta,\theta') &gt; KL_{max}\), increase \(\beta\); when \(KL(\theta,\theta') &lt; KL_{min}\), decrease \(\beta\).</p> <p><br><br></p> </div> </article><div id="disqus_thread" style="max-width: 800px; margin: 0 auto;"> <script type="text/javascript">var disqus_shortname="al-folio",disqus_identifier="/blog/2022/rl1",disqus_title="Reinforcement Learning Basics";!function(){var e=document.createElement("script");e.type="text/javascript",e.async=!0,e.src="//"+disqus_shortname+".disqus.com/embed.js",(document.getElementsByTagName("head")[0]||document.getElementsByTagName("body")[0]).appendChild(e)}();</script> <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript" rel="external nofollow noopener" target="_blank">comments powered by Disqus.</a> </noscript> </div> </div> </div> </div> </div> <footer class="fixed-bottom"> <div class="container mt-0"> © Copyright 2023 Yuhang Song. Powered by <a href="https://jekyllrb.com/" target="_blank" rel="external nofollow noopener">Jekyll</a> with <a href="https://github.com/alshedivat/al-folio" rel="external nofollow noopener" target="_blank">al-folio</a> theme. Hosted by <a href="https://pages.github.com/" target="_blank" rel="external nofollow noopener">GitHub Pages</a>. Photos from <a href="https://unsplash.com" target="_blank" rel="external nofollow noopener">Unsplash</a>. </div> </footer> <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script> <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha256-fgLAgv7fyCGopR/gBNq2iW3ZKIdqIcyshnUULC4vex8=" crossorigin="anonymous"></script> <script src="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/js/mdb.min.js" integrity="sha256-NdbiivsvWt7VYCt6hYNT3h/th9vSTL4EDWeGs5SN3DA=" crossorigin="anonymous"></script> <script defer src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha256-Nn1q/fx0H7SNLZMQ5Hw5JLaTRZp0yILA/FRexe19VdI=" crossorigin="anonymous"></script> <script defer src="https://cdn.jsdelivr.net/npm/imagesloaded@4/imagesloaded.pkgd.min.js"></script> <script defer src="/assets/js/masonry.js" type="text/javascript"></script> <script defer src="https://cdn.jsdelivr.net/npm/medium-zoom@1.0.8/dist/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script> <script defer src="/assets/js/zoom.js"></script> <script defer src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script> <script defer src="https://unpkg.com/bootstrap-table@1.21.4/dist/bootstrap-table.min.js"></script> <script src="/assets/js/no_defer.js"></script> <script defer src="/assets/js/common.js"></script> <script defer src="/assets/js/copy_code.js" type="text/javascript"></script> <script async src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script> <script async src="https://badge.dimensions.ai/badge.js"></script> <script type="text/javascript">window.MathJax={tex:{tags:"ams"}};</script> <script defer type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script> <script defer src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script> <script type="text/javascript">function progressBarSetup(){"max"in document.createElement("progress")?(initializeProgressElement(),$(document).on("scroll",function(){progressBar.attr({value:getCurrentScrollPosition()})}),$(window).on("resize",initializeProgressElement)):(resizeProgressBar(),$(document).on("scroll",resizeProgressBar),$(window).on("resize",resizeProgressBar))}function getCurrentScrollPosition(){return $(window).scrollTop()}function initializeProgressElement(){let e=$("#navbar").outerHeight(!0);$("body").css({"padding-top":e}),$("progress-container").css({"padding-top":e}),progressBar.css({top:e}),progressBar.attr({max:getDistanceToScroll(),value:getCurrentScrollPosition()})}function getDistanceToScroll(){return $(document).height()-$(window).height()}function resizeProgressBar(){progressBar.css({width:getWidthPercentage()+"%"})}function getWidthPercentage(){return getCurrentScrollPosition()/getDistanceToScroll()*100}const progressBar=$("#progress");window.onload=function(){setTimeout(progressBarSetup,50)};</script> </body> </html>
+<!DOCTYPE html>
+<html lang="en">
+
+  <!-- Head -->
+  <head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">    <!-- Metadata, OpenGraph and Schema.org -->
+    
+
+    <!-- Standard metadata -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Reinforcement Learning Basics | Yuhang Song | BLOG</title>
+    <meta name="author" content="Yuhang  Song">
+    <meta name="description" content="Reinforcement Learning Note. [Model-based | Model-free Value-based | Model-free Policy-based | AC | Continuous Action Space]">
+    <meta name="keywords" content="jekyll, jekyll-theme, academic-website, portfolio-website">
+
+
+    <!-- Bootstrap & MDB -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-DF7Zhf293AJxJNTmh5zhoYYIMs2oXitRfBjY+9L//AY=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/css/mdb.min.css" integrity="sha256-jpjYvU3G3N6nrrBwXJoVEYI/0zw8htfFnhT9ljN3JJw=" crossorigin="anonymous">
+
+    <!-- Bootstrap Table -->
+    <link defer rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.4/dist/bootstrap-table.min.css">
+
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/academicons@1.9.1/css/academicons.min.css" integrity="sha256-i1+4qU2G2860dGGIOJscdC30s9beBXjFfzjWLjBRsBg=" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:100,300,400,500,700|Material+Icons">
+
+    <!-- Code Syntax Highlighting -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jwarby/jekyll-pygments-themes@master/github.css" media="" id="highlight_theme_light">
+
+    
+    <!-- Sidebar Table of Contents -->
+    <link href="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.css" rel="stylesheet">
+    
+
+    <!-- Styles -->
+    
+    <link rel="shortcut icon" href="data:image/svg+xml,&lt;svg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22&gt;&lt;text%20y=%22.9em%22%20font-size=%2290%22&gt;%E2%9A%9B%EF%B8%8F&lt;/text&gt;&lt;/svg&gt;">
+    
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="canonical" href="https://huskykingdom.github.io/blog/2022/rl1/">
+
+    <!-- Dark Mode -->
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jwarby/jekyll-pygments-themes@master/native.css" media="none" id="highlight_theme_dark">
+
+    <script src="/assets/js/theme.js"></script>
+    <script src="/assets/js/dark_mode.js"></script>
+    
+
+  </head>
+
+  <!-- Body -->
+  <body class="fixed-top-nav ">
+
+    <!-- Header -->
+    <header>
+
+      <!-- Nav Bar -->
+      <nav id="navbar" class="navbar navbar-light navbar-expand-sm fixed-top">
+        <div class="container">
+          <a class="navbar-brand title font-weight-lighter" href="/">Yuhang Song | BLOG</a>
+          <!-- Navbar Toggle -->
+          <button class="navbar-toggler collapsed ml-auto" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar top-bar"></span>
+            <span class="icon-bar middle-bar"></span>
+            <span class="icon-bar bottom-bar"></span>
+          </button>
+
+          <div class="collapse navbar-collapse text-right" id="navbarNav">
+            <ul class="navbar-nav ml-auto flex-nowrap">
+
+              <!-- About -->
+              <li class="nav-item ">
+                <a class="nav-link" href="/">About</a>
+              </li>
+              
+              <!-- Blog -->
+              <li class="nav-item active">
+                <a class="nav-link" href="/blog/">Blog<span class="sr-only">(current)</span></a>
+              </li>
+
+              <!-- Other pages -->
+              <li class="nav-item ">
+                <a class="nav-link" href="/publications/">Publications</a>
+              </li>
+              <li class="nav-item ">
+                <a class="nav-link" href="/projects/">Projects</a>
+              </li>
+              <li class="nav-item ">
+                <a class="nav-link" href="/cv/">Curriculum Vitae</a>
+              </li>
+
+              <!-- Toogle theme mode -->
+              <li class="toggle-container">
+                <button id="light-toggle" title="Change theme">
+                  <i class="fas fa-moon"></i>
+                  <i class="fas fa-sun"></i>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Scrolling Progress Bar -->
+      <progress id="progress" value="0">
+        <div class="progress-container">
+          <span class="progress-bar"></span>
+        </div>
+      </progress>
+    </header>
+
+
+    <!-- Content -->
+    <div class="container mt-5">
+      
+        
+        <div class="row">
+          <!-- sidebar, which will move to the top on a small screen -->
+          <div class="col-sm-3">
+            <nav id="toc-sidebar" class="sticky-top"></nav>
+          </div>
+          <!-- main content area -->
+          <div class="col-sm-9">
+            <!-- _layouts/post.html -->
+
+<div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Reinforcement Learning Basics</h1>
+    <p class="post-meta">October 30, 2022</p>
+    <p class="post-tags">
+      <a href="/blog/2022"> <i class="fas fa-calendar fa-sm"></i> 2022 </a>
+        ·  
+        <a href="/blog/category/studynote">
+          <i class="fas fa-tag fa-sm"></i> studynote</a>  
+          
+
+    </p>
+  </header>
+
+  <article class="post-content">
+    
+    <div id="markdown-content">
+      <p>Download full version of this notes with more details and images <a href="">here</a>.</p>
+
+<h1 id="reinforcement-learning">Reinforcement Learning</h1>
+
+<h2 id="model-based-rl-dynamic-programming"><strong>Model-based RL: Dynamic Programming</strong></h2>
+
+<p>In MDP, we want to model the state value function and state-action value functions, besed on which, we can form a strategy that greedly select actions with max state-action value in for each individual state.</p>
+
+<p>We define state value function \(v_\pi\) and stage-action value function \(q_\pi\) for a certain policy \(\pi\) as following:</p>
+
+\[q_\pi(s,a) = \mathbb{E}_{\tau \backsim \pi}[R(\tau) | S_0=s, A_0=a] \\
+v_\pi(s) = \mathbb{E}_{a \backsim \tau}[q_\pi(s,a)]\]
+
+<p>The Bellman Expectation Functions provids us a way to iteratively calculate value functions by decompose them into immediate reward plus discounted value of successor state.</p>
+
+\[v_\pi(s) = \mathbb{E}_\pi[R_{t+1} + \gamma v_\pi(S_{t+1}) | S_t = s] \\
+
+q_\pi(s,a) = \mathbb{E}_\pi[R_{t+1}+\gamma q_\pi(S_{t+1},A_{t+1} | S_t=s,A_t=a)]\]
+
+<p>The Bellman Equations can be solved directly if we have full information of the environment(i.e. we know the state transformation function), in discrete finite state environment:
+\(v = r + \gamma Pv\)</p>
+
+<p>From which \(v\) and \(r\) are scalars, \(P\) is state transform probability matrix. Solve it directly we get:</p>
+
+\[v = (I-\gamma P)^{-1}r\]
+
+<p>The Bellman Optimally Equation can be then written as:</p>
+
+\[v_*(s) = max_{a}\mathbb{E}[R_s^a + \gamma  v_*(s')] = max_{a} R_s^a + \gamma \sum_{s' \in S} p_{ss'}^a v_*(s') \\ 
+
+q_*(s,a) =  R_s^a + \gamma \mathbb{E}[max_{a'} q_*(s',a')] = R_s^a + \gamma \sum_{s' \in S} p_{ss'}^a max_{a'} q_*(s',a')\]
+
+<p>The complexity of solving Bellman Expectation equation is \(O(n^3)\), where \(n\) is the number of states, that means it is hard to solve when having large state space. In such case, we need to use methods like Dynamic Programming, Monte-Carlo Estimation, or Temporal Difference. In other hand, Bellman Optimalityt Equations are non-linear, and has no closed form solution(in general), therefore cannot be directly solved, we need to use other methods.</p>
+
+<p>Dynamic Programming iteratively solves large scale questions by decomposite them into smaller ones, those questions have to be:</p>
+
+<ul>
+  <li>With Optimal Substructure</li>
+  <li>Overlapping Subproblems</li>
+</ul>
+
+<p>MDP satisfy both propeerties. We can therefore use DP to solve MDP questions, <strong>note that DP solutions requires Full Knowledge of the MDP, and are hence Model-Based RL methods.</strong></p>
+
+<h3 id="policy-iteration">Policy Iteration</h3>
+
+<p>Policy Iteration method evaluate a given policy \(\pi\) by dynamic programming, it iteratively use Bellman Expectations to evaluate the state function of given policy \(\pi\). Specifically for each iteration \(k\):</p>
+
+\[v_{k+1}(s) = \sum_{a \in A} \pi(a|s) (R_s^a + \gamma \sum_{s' \in S} P_{ss'}^a v_k(s'))\]
+
+<p>To improve the policy, acting greedily with respect to \(v_\pi\): 
+\(\pi' = greedy(v_\pi) = argmax_{a \in A} \ q_\pi(s,a)\)</p>
+
+<p>The algorithm converges to \(v_*(s)\) with greedy policy imrovement, otherwise converges to real \(v_\pi(s)\).</p>
+
+<h3 id="value-iteration">Value Iteration</h3>
+
+<p>Based on Principle of Optimality, which states a policy \(\pi(s)\) is an optimal policy on state \(s\) if and only if \(\pi(s)\) achives \(v_\pi(s') = v_*(s')\) for any state \(s'\) that is reachable from \(s\). From which, it implies if we know the solution of \(v_*(s')\), we can figure out the optimal solution to any state \(s\) by <strong>One-Step Full Backup</strong>.</p>
+
+<p>Formally, if we know the solution to subproblems \(v_*(s')\), the solution \(v_*(s)\) can be found be one-step lookahead:</p>
+
+\[v_*(s) = max_{a \in A} R_s^a + \gamma \sum_{s' \in S} p_{ss'}^a v_*(s')\]
+
+<p>The algorithm converges to \(v_*(s)\).</p>
+
+<p>In summery:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Problem</th>
+      <th>Bellman Equation</th>
+      <th>Method (Algorithm)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Value Function Prediction</td>
+      <td>Bellman Expectation Equation</td>
+      <td>Policy Iteration</td>
+    </tr>
+    <tr>
+      <td>Control</td>
+      <td>Bellman Expectation Equation</td>
+      <td>Policy Iteration + Greedy Policy Improvement</td>
+    </tr>
+    <tr>
+      <td>Control</td>
+      <td>Bellman Optimality Equation</td>
+      <td>Value Iteration</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="asynchronous-dynamic-programming">Asynchronous Dynamic Programming</h3>
+
+<p>DP methods described above used synchronous backups, where all states are backed up in parallel. Asynchronous DP backs up states individually, in any order, can significantly reduce computation. It is guaranteed to converge if all states continue to be selected.</p>
+
+<p>Three simple ideas for asynchronous dynamic programming:</p>
+<ul>
+  <li>In-place dynamic programming</li>
+  <li>Prioritised sweeping</li>
+  <li>Real-time dynamic programming</li>
+</ul>
+
+<p><br></p>
+
+<h2 id="model-free-value-based-methods"><strong>Model-free Value-based Methods</strong></h2>
+
+<p>Dynamic Programming RL methods are all model based methods, in which we need specific environment model to excute them, it is common in real-world RL environment that we dont know environment model, Monte-Carlo / Temporal Difference methods provided algorithms that are model-free to predict value functions.</p>
+
+<h3 id="monte-carlo">Monte-Carlo</h3>
+
+<p>Monte-Carlo(MC) methods learn directly from episodes of experience, instead of evaluate policy by expected return(based on environment knowledge), it uses mean return(based on empirical knowledge) to estimate the value function.</p>
+
+<p>The basic idea is, to evaluate state value for \(s\), the firstt/every time \(t\) when state \(s\) is visited in an episode, increment counter \(N(s) \leftarrow N(s) +1\), increment total return \(S(s) \leftarrow S(s) + G_t\), the estimated state value can be calculated as:</p>
+
+\[V(s) = \frac{S(s)}{N(s)}\]
+
+<p>By law of large numbers, \(V(s) \rightarrow v_\pi(s)\) as \(N(s) \rightarrow \infty\).</p>
+
+<p>By incremental MC updates, the final MC evaluation equation can be written as:</p>
+
+\[V(s_t) \leftarrow V(S_t) + \alpha (G_t - V(S_t))\]
+
+<h3 id="temporal-difference">Temporal Difference</h3>
+
+<p>Temporal Difference(TD) method learns from incomplete eepisodes, in which the agent do not have to wait until finish whole episode to update value function, like did in MC. TD updates value function by leverage the differences between target and estimation in different time step. It uses idea of <strong>Bootstrapping</strong> with a biased estimation. Less precise than MC, but more convinent and with lower variance.</p>
+
+<p>In Monte-Carlo methods, the value function is updated by:</p>
+
+\[V(s_t) \leftarrow V(S_t) + \alpha (G_t - V(S_t))\]
+
+<p>Alternatively in TD method, we update value of \(V(S_t)\) towards estimated return \(R_{t+1} + \gamma V(S_{t+1})\):</p>
+
+\[V(s_t) \leftarrow V(S_t) + \alpha ([R_{t+1} + \gamma V(S_{t+1})] - V(S_t))\]
+
+<p>Where \(R_{t+1} + \gamma V(S_{t+1})\) called <em>TD target</em>, and \(\delta_t = R_{t+1} + \gamma V(S_{t+1}) - V(S_t)\) called <em>TD error</em>.</p>
+
+<p>TD can learn before(or without) knowing the final outcome, whereas in order for MC to learn, we need to wait until the termination of the episode which only works in episodic environments.</p>
+
+<h3 id="on-policy-value-based-controls">On-Policy Value-based Controls</h3>
+
+<p><strong>MC based: Greedy Policy Improvements</strong></p>
+
+<p>Evaluate state-action value functions \(q_\pi(s,a)\) instead of state value function \(v_\pi(s)\):</p>
+
+\[q(s_t,a_t) \leftarrow q(s_t,a_t) + \alpha (G_t - q(s_t,a_t))\]
+
+<p>Improve policy by \(\epsilon\)-greedily selecting \(q(s,a)\).</p>
+
+<p><strong>TD based: Sarsa</strong></p>
+
+<p>Sarsa algorithm, replace MC by TD in control loop:</p>
+
+\[q(s_t,a_t) \leftarrow q(s_t,a_t) + \alpha (R + \gamma q(s_{t+1},a_{t+1}) - q(s_t,a_t))\]
+
+<h3 id="off-policy-value-based-controls">Off-Policy Value-based Controls</h3>
+
+<p>Objective:</p>
+
+<ul>
+  <li>Learn from observing humans or other agents.</li>
+  <li>Re-use experience generated from old policies \(\pi_1;\pi_2,....,\pi_{t-1}\).</li>
+  <li>Learn about optimal policy while following exploratory policy.</li>
+  <li>Learn about multiple policies while following one policy.</li>
+</ul>
+
+<p><strong>MC based: Importance Sampling</strong></p>
+
+<p>Gater trajectories from another policy distribution to update current distribution using a trick namely:</p>
+
+<p>[Importance Sampling]</p>
+
+<p>Estimate the expectation of distribution Q from P:</p>
+
+\[\mathbb{E}_{X \backsim P}[f(x)] = \sum P(x) f(x) = \sum Q(x) \frac{P(x)}{Q(x)} f(x) = \mathbb{E}_{X \backsim Q}[\frac{P(x)}{Q(x)}f(x)]\]
+
+<p>Define \(G_t^{\pi/\mu} = \frac{\pi(A_t|S_t)}{\mu(A_t|S_t)} \frac{\pi(A_{t+1}|S_{t+1})}{\mu(A_{t+1}|S_{t+1})} ... \frac{\pi(A_T|S_T)}{\mu(A_T|S_T)} G_t\), update value towards corrected return:
+\(V(S_t) \leftarrow V(S_t) + \alpha(G_t^{\pi/\mu} - V(S_t))\)</p>
+
+<p>Note that importance sampling can dramatically increase variance. This mechanism can also be applied to TD:</p>
+
+\[V(S_t) \leftarrow V(S_t) + \alpha( \frac{\pi(A_t|S_t)}{\mu(A_t|S_t)} (R_{t+1} + \gamma V(S_{t+1})) - V(S_t))\]
+
+<p><strong>TD based: Q-Learning</strong></p>
+
+<p>Instead of using target value based on current policy \(\pi\), the target value in Q-Learning beased on greedy policy over state-action value function:</p>
+
+\[q(s_t,a_t) \leftarrow q(s_t,a_t) + \alpha (R + \gamma \ max_a q(s_{t+1},a) - q(s_t,a_t))\]
+
+<p><br></p>
+
+<h2 id="model-free-policy-based-methods"><strong>Model-free Policy Based methods</strong></h2>
+
+<p>Advantages:</p>
+<ul>
+  <li>Better convergence properties.</li>
+  <li>Effective in high-dimensional or continuous action spaces.</li>
+  <li>Can learn stochastic policies.</li>
+</ul>
+
+<p>Disadvantages:</p>
+<ul>
+  <li>Typically converge to a local rather than global optimum.</li>
+  <li>Evaluating a policy is typically inefficient and high variance.</li>
+</ul>
+
+<h3 id="gradient-based-policy-gradient">Gradient Based: Policy Gradient</h3>
+<p>Define that in a MDP environment, total reward gain from a certain policy \(\pi\) can be shown as:</p>
+
+\[\bar{R}_\theta = \sum_\tau R(\tau)p_\theta(\tau) \ \ \ _{(1)} \\
+where \ \ p_\theta = p(s_1) \prod_{t=1}^{T} p_\theta(a_t \ given \ s_t) p(s_{t+1}|s_t,a_t) \ \ \ _{(2)}\]
+
+<p>In which policy \(\pi\) is parameterised by \(\theta\), and \(\tau\) represents a single trajectory, \(p_\theta\) is the probability of the trajectory.</p>
+
+<p>Since equation (1) involves reward of trajectory \(R(\tau)\) times the probability of trajectory \(\tau\) following policy \(\theta\), noted as \(p_\theta\), as well as the summing operation \(\sum_\tau\), it can be seen as the expectation of reward for a certain policy:</p>
+
+\[\mathbb{E}_{\tau \backsim p_\theta(\tau)}[R(\tau)]\]
+
+<p>Hence we want to maximize the expectation of reward for a certain policy, to achive this, calculate the gradient of the function and perform gredient acsent:</p>
+
+\[\begin{aligned}
+    \nabla_\theta \mathbb{E}_{\tau \backsim p_\theta(\tau)}[R(\tau)] = \nabla_\theta \int_{\tau_t} R_t \ p_\theta(\tau_t) \ \  d\tau_t \\ 
+    = \int_{\tau_t} R_t \ \nabla_\theta \ p_\theta (\tau_t) \ \  d\tau_t \\ 
+    = \int_{\tau_t} R_t \ p_\theta(\tau_t) \ \nabla_\theta \ log p_\theta (\tau_t) \ \  d\tau_t \\   
+    = \mathbb{E}_{\tau \backsim p_\theta(\tau)}[R_t \ \nabla_\theta \ log p_\theta (\tau_t)]  
+
+\end{aligned}\]
+
+<p>\(\mathbb{E}_{\tau \backsim p_\theta(\tau)}[R_t \ \nabla_\theta \ log p_\theta (\tau_t)]\) can be approximated by collecting experience as much as possible and compute the average:</p>
+
+\[\mathbb{E}_{\tau \backsim p_\theta(\tau)}[R(\tau) \ \nabla_\theta \ log p_\theta (\tau)] \approx \frac{1}{N} \sum_{n=1}^N R(\tau^n) \ \nabla_\theta \ log p_\theta (\tau^n)\]
+
+<p>Since we dont have full model for \(p_\theta\), it is not possible to compute equation (2), that is, we dont know \(p(s_{t+1} \ given \ s_t,a_t)\), because this term depends on the environment. Here for gradient acsent with respect to \(\theta\), we only need \(\nabla log \ p_\theta(\tau_t)\) instead of the value of \(log \ p_\theta(\tau_t)\) itself, therefore simply replace \(p_\theta(\tau_t)\) by \(\pi_\theta(a_t \ given \ s_t)\) we get:</p>
+
+\[\mathbb{E}_{\tau \backsim p_\theta(\tau)}[R(\tau) \ \nabla_\theta \ \sum_{t=1}^{T_n} log \ \pi_\theta(a_t | s_t)] \approx \frac{1}{N} \sum_{n=1}^N \sum_{t=1}^{T_n} R(\tau^n) \ \nabla_\theta \ log \ \pi_\theta(a_t^n \ given \ s_t^n)\]
+
+<p>After obtaining the gradient of objective function, policy parameters \(\theta\) are updated by gradient acsent:</p>
+
+\[\theta \leftarrow \theta + \alpha \nabla \bar{R}_\theta
+
+\\
+
+where \ \ \nabla \bar{R}_\theta = \frac{1}{N} \sum_{n=1}^N \sum_{t=1}^{T_n} R(\tau^n) \ \nabla_\theta \ log \ \pi_\theta(a_t^n \ given \ s_t^n)\]
+
+<p><strong>Tips1-Add a Baseline</strong></p>
+
+<p>It is possible that in a specific reinforcement learning environment, that \(R(\tau^n)\) is always positive. In this case, we might monotoniclly increase the probability of a certain action, this can be solved by adding a baseline to our equation, so that instead of naively taking rewards feedback from environment, we compare it to the average rewards we have and make the reward be relative to all previous rewards:</p>
+
+\[\nabla \bar{R}_\theta = \frac{1}{N} \sum_{n=1}^N \sum_{t=1}^{T_n} (R(\tau^n)-b) \ \nabla_\theta \ log \ \pi_\theta(a_t^n | s_t^n) \\
+where \ \ b \approx \mathbb{E}[R(\tau)]\]
+
+<p>In other words, instead of rewarding trajectory by only the environment rewards, we reward a trajectory by how looking at how good this trajectory is, comparing with all other collected trajectories, since all actions in a same trajectory are being weighted by same reward, yet those actions might benefits for different amount.</p>
+
+<p>To address this, we weight the \(a_t\) by the reward obtained from time \(t\), add a discount factor to rewards obtained in later stages.</p>
+
+\[\nabla \bar{R}_\theta = \frac{1}{N} \sum_{n=1}^N \sum_{t=1}^{T_n} ([\sum_{t^` = t}^{T_n} \gamma^{(t^`-t)} \cdot r_{t^`}^n ] -b) \ \nabla_\theta \ log \ \pi_\theta(a_t^n | s_t^n) \\
+where \ \ b \approx \mathbb{E}[R(\tau)]\]
+
+<p><strong>Tips2-Assign Suitable Credit</strong></p>
+
+<p>The current version of objective function evaluates the whole trajectory by the total rewards obtained from the environment, it is reasonable, but assumes in-precise correlations between each actions in the trajectory.</p>
+
+<p><br></p>
+
+<h2 id="actor-critic-integrating-value-based--policy-based"><strong>Actor-Critic: Integrating Value-based &amp; Policy-based</strong></h2>
+
+<p>The above PG(Policy Gradient) algorithm is evaluating the policy by MC-style critic(i.e. mean expected reward returned by the environment), in Actor-Critic, we define a critic:</p>
+
+\[Q_w(s,a) \approx Q^{\pi_\theta}(s,a)\]
+
+<p>Where the critic approximates state-action value function \(Q(s,a)\), the actor approximates the policy \(\pi\), there are parameterized by \(w\) and \(\theta\) respectively.</p>
+
+<p>Actor-critic algorithm follow an approximate policy gradient, the actor network can be updated by:</p>
+
+\[\nabla_\theta J(\theta) \approx \mathbb{E}_{\pi_\theta}[\nabla_\theta log \pi_\theta(s,a) Q_w(s,a)] \\
+
+\nabla \theta = \alpha \nabla_\theta log \pi_\theta(s,a) Q_w(s,a) \\
+
+\theta_{t+1} \leftarrow \theta_t + \lambda \nabla\theta_t\]
+
+<p>The critic network is based on critic functions, here use Q-function as an example, the critic network can be updated as:</p>
+
+\[\nabla_w J(w) \approx \mathbb{E}_{\pi_\theta}[MSE(Q_{t},R_{t+1}+max_a Q_{t+1})] \\
+
+\nabla w = MSE(Q_{t},R_{t+1}+max_a Q_{t+1}) \\
+
+w_{t+1} \leftarrow w_t + \lambda \nabla w_t\]
+
+<p>Instead of leting critic to estimate state-value function, we can allow it to alternatively estimates Advantage function \(A(s,a) = Q_w(s,a) - V_v(s)\) to reduce the variance. There are many alternative critic function choices.</p>
+
+<p><br></p>
+
+<h2 id="continuous-action-space"><strong>Continuous Action Space</strong></h2>
+
+<p>Methods proposed so far only solves for environments that are with discrete action space, so that value functions for each actions or the probability distribution of selecting actions could be computed. However, in real world, most of the problem are with continous action space.</p>
+
+<h3 id="deep-derministic-policy-gradient">Deep Derministic Policy Gradient</h3>
+
+<p>Deep Derministic Policy Gradient is then proposed, it is able to solve RL environments with continuous action space by integrating ideas of DQN and PG. It can be viewed as extended version of DQN that is able to solve problems with continous action space. DDPG algorithm uses Actor-Critic architecture.</p>
+
+<p>In DQN, in order to evaluate value function, we need \(max_aQ_{t+1}\), it is not possible to compute such value in continous action space. Instead of inputing only the state into critic network and obtain the Q-values for all actions, DDPG critic network takes next action computed from actor network as well, and evaluate Q value for this certain action. Updating of DDPG critic network is the same to DQN:</p>
+
+\[\nabla_w J(w) \approx \mathbb{E}_{\pi_\theta}[MSE(Q_{t},R_{t+1}+ Q_{t+1}^{a \backsim Actor})] \\
+
+\nabla w = MSE(Q_{t},R_{t+1}+Q_{t+1}^{a \backsim Actor}) \\
+
+w_{t+1} \leftarrow w_t - \lambda \nabla w_t\]
+
+<p>Intuitively, in DDPG, the actor network performs differently as the one in PG, it is not possible for it to compute probalibity distributions for all actions in continous action space, therefore we alter the network to output a certain action that could be with max Q value. The target of the actor network in DDPG is to maximize the value of \(Q_t(s,a)\) evaluated by critic network, therefore to update actor network, we use gradient acsent:</p>
+
+\[pg = \frac{\partial Q(s,\pi(s;\theta),w)}{\partial \theta} = \frac{\partial Q(s,a,w)}{\partial a} \cdot \frac{\partial a}{\partial \theta} \\
+
+\theta \leftarrow \theta + \bar{\lambda} \theta\]
+
+<p>Note that in DDPG, tricks like target networks for both AC networks; memory buffer are being used. We also add a environmental noise \(N\) when performing actions to allow exploration, as well as off-policy learning.</p>
+
+<h3 id="proximal-policy-optimization">Proximal Policy Optimization</h3>
+
+<p>Baseline algorithm of OpenAI. PPO allows off-policy learning to policy gradient algorithm. In policy gradient, we update our policy network by compute gradient of the expected reward function with respect to policy parameters \(\theta\), and perform gradient acsent to maximize it:</p>
+
+\[\nabla \bar{R}_\theta = \frac{1}{N} \sum_{n=1}^N \sum_{t=1}^{T_n} R(\tau^n) \ \nabla_\theta \ log \ \pi_\theta(a_t^n | s_t^n) \\
+= \mathbb{E}_{\tau \backsim \pi_\theta}[R(\tau^n) \ \nabla_\theta \ log \ \pi_\theta(a_t^n | s_t^n)] \\
+\theta \leftarrow \theta + \alpha \nabla \bar{R}_\theta\]
+
+<p>In PPO algorithm, instead of sampling trajectories from policy \(\pi_\theta\), in order to increase sample efficiency(reuse expirence), we sample trajectories from another policy \(\pi_{\theta'}\) and apply a importance sampling method to correct the difference.</p>
+
+\[\nabla \bar{R_\theta} =  \mathbb{E}_{\tau \backsim \pi_{\theta'}}[\frac{\pi_\theta(a_t|s_t)}{\pi_{\theta'}(a_t|s_t)} R(\tau^n) \ \nabla_\theta \ log \ \pi_\theta(a_t^n given s_t^n)]\]
+
+<p>In addition, we need to add a regularzation term (or in TRPO, add a constrain) to the objective function to constrain the difference between two distributions, therefore the objective function becomes:</p>
+
+<p>\(J(\theta) = J_{\theta'}(\theta) - \beta KL(\theta,\theta')\)
+Where adaptively set the value of \(\beta\), specificlly when \(KL(\theta,\theta') &gt; KL_{max}\), increase \(\beta\); when \(KL(\theta,\theta') &lt; KL_{min}\), decrease \(\beta\).</p>
+
+<p><br><br></p>
+
+    </div>
+  </article><div id="disqus_thread" style="max-width: 800px; margin: 0 auto;">
+    <script type="text/javascript">
+        var disqus_shortname  = 'al-folio';
+        var disqus_identifier = '/blog/2022/rl1';
+        var disqus_title      = "Reinforcement Learning Basics";
+        (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript" rel="external nofollow noopener" target="_blank">comments powered by Disqus.</a>
+</noscript>
+</div>
+</div>
+
+          </div>
+        </div>
+        
+      
+    </div>
+
+    <!-- Footer -->    
+    <footer class="fixed-bottom">
+      <div class="container mt-0">
+        © Copyright 2023 Yuhang  Song. Powered by <a href="https://jekyllrb.com/" target="_blank" rel="external nofollow noopener">Jekyll</a> with <a href="https://github.com/alshedivat/al-folio" rel="external nofollow noopener" target="_blank">al-folio</a> theme. Hosted by <a href="https://pages.github.com/" target="_blank" rel="external nofollow noopener">GitHub Pages</a>. Photos from <a href="https://unsplash.com" target="_blank" rel="external nofollow noopener">Unsplash</a>.
+
+      </div>
+    </footer>
+
+    <!-- JavaScripts -->
+    <!-- jQuery -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <!-- Bootsrap & MDB scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha256-fgLAgv7fyCGopR/gBNq2iW3ZKIdqIcyshnUULC4vex8=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/js/mdb.min.js" integrity="sha256-NdbiivsvWt7VYCt6hYNT3h/th9vSTL4EDWeGs5SN3DA=" crossorigin="anonymous"></script>
+
+    <!-- Masonry & imagesLoaded -->
+  <script defer src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha256-Nn1q/fx0H7SNLZMQ5Hw5JLaTRZp0yILA/FRexe19VdI=" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+  <script defer src="/assets/js/masonry.js" type="text/javascript"></script>
+    
+  <!-- Medium Zoom JS -->
+  <script defer src="https://cdn.jsdelivr.net/npm/medium-zoom@1.0.8/dist/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+  <script defer src="/assets/js/zoom.js"></script>
+  <!-- Sidebar Table of Contents -->
+  <script defer src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script>
+
+
+  <!-- Bootstrap Table -->
+  <script defer src="https://unpkg.com/bootstrap-table@1.21.4/dist/bootstrap-table.min.js"></script>
+
+  <!-- Load Common JS -->
+  <script src="/assets/js/no_defer.js"></script>
+  <script defer src="/assets/js/common.js"></script>
+  <script defer src="/assets/js/copy_code.js" type="text/javascript"></script>
+
+    
+  <script async src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script>
+  <script async src="https://badge.dimensions.ai/badge.js"></script>
+
+    <!-- MathJax -->
+  <script type="text/javascript">
+    window.MathJax = {
+      tex: {
+        tags: 'ams'
+      }
+    };
+  </script>
+  <script defer type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script>
+  <script defer src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+    
+    
+
+<!-- Scrolling Progress Bar -->
+<script type="text/javascript">
+  /*
+   * This JavaScript code has been adapted from the article 
+   * https://css-tricks.com/reading-position-indicator/ authored by Pankaj Parashar, 
+   * published on the website https://css-tricks.com on the 7th of May, 2014.
+   * Couple of changes were made to the original code to make it compatible 
+   * with the `al-foio` theme.
+   */
+  const progressBar = $("#progress");
+  /*
+   * We set up the bar after all elements are done loading.
+   * In some cases, if the images in the page are larger than the intended
+   * size they'll have on the page, they'll be resized via CSS to accomodate
+   * the desired size. This mistake, however, breaks the computations as the
+   * scroll size is computed as soon as the elements finish loading.
+   * To account for this, a minimal delay was introduced before computing the
+   * values.
+   */
+  window.onload = function () {
+    setTimeout(progressBarSetup, 50);
+  };
+  /*
+   * We set up the bar according to the browser.
+   * If the browser supports the progress element we use that.
+   * Otherwise, we resize the bar thru CSS styling
+   */
+  function progressBarSetup() {
+    if ("max" in document.createElement("progress")) {
+      initializeProgressElement();
+      $(document).on("scroll", function() {
+        progressBar.attr({ value: getCurrentScrollPosition() });
+      });
+      $(window).on("resize", initializeProgressElement);
+    } else {
+      resizeProgressBar();
+      $(document).on("scroll", resizeProgressBar);
+      $(window).on("resize", resizeProgressBar);
+    }
+  }
+  /*
+   * The vertical scroll position is the same as the number of pixels that
+   * are hidden from view above the scrollable area. Thus, a value > 0 is
+   * how much the user has scrolled from the top
+   */
+  function getCurrentScrollPosition() {
+    return $(window).scrollTop();
+  }
+
+  function initializeProgressElement() {
+    let navbarHeight = $("#navbar").outerHeight(true);
+    $("body").css({ "padding-top": navbarHeight });
+    $("progress-container").css({ "padding-top": navbarHeight });
+    progressBar.css({ top: navbarHeight });
+    progressBar.attr({
+      max: getDistanceToScroll(),
+      value: getCurrentScrollPosition(),
+    });
+  }
+  /*
+   * The offset between the html document height and the browser viewport
+   * height will be greater than zero if vertical scroll is possible.
+   * This is the distance the user can scroll
+   */
+  function getDistanceToScroll() {
+    return $(document).height() - $(window).height();
+  }
+
+  function resizeProgressBar() {
+    progressBar.css({ width: getWidthPercentage() + "%" });
+  }
+  // The scroll ratio equals the percentage to resize the bar
+  function getWidthPercentage() {
+    return (getCurrentScrollPosition() / getDistanceToScroll()) * 100;
+  }
+</script>
+
+  </body>
+</html>
