@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Prophet System
-description: a project with a background image
+description: AI online prediction platform.
 img: assets/img/prophet.png
 importance: 1
 category: Industrial
