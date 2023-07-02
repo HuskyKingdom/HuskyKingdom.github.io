@@ -11,9 +11,9 @@ toc:
   sidebar: left
 ---
 
-This article provides clear instructions on how to install necessary environments for all modules in <a href="https://github.com/KaiChen1008/Sim-to-Real-Virtual-Guidance-for-Robot-Navigation">Sim-To-Real Navigation Robots</a> project, apart from the official <a href="https://kaichen1008.github.io/Sim-to-Real-Virtual-Guidance-for-Robot-Navigation/">original documentation</a> provided, since it was made in 2020, some additional corrections are needed during the installation.
+This article provides clear instructions on how to install necessary environments for all modules in <a href="https://github.com/KaiChen1008/Sim-to-Real-Virtual-Guidance-for-Robot-Navigation">Sim-To-Real Navigation Robots</a> project, apart from the official <a href="https://kaichen1008.github.io/Sim-to-Real-Virtual-Guidance-for-Robot-Navigation/">original documentation</a> provided. Since it was made in 2020, some additional corrections are needed during installation.
 
-Moreover, there are some missing files in the original repo, they were also provided here. Note that this article will only go though the updates to the original documentation, please refer to the original documentation for full instructions.
+Moreover, there are some missing files in the original repo, they were also provided in this page. Note that we will only go though the updates to the original documentation, please refer to the original documentation for full instructions.
 
 
 ## ORB-SLAM2 Installation
@@ -36,19 +36,19 @@ cmake -DCMAKE_BUILD_TYPE=Release \
       -DENABLE_PRECOMPILED_HEADERS=OFF
 ```
 
-`-DENABLE_PRECOMPILED_HEADERS=OFF` is added, without this line of parameter might result in error of missing _stdlib.h_ (fatal error: stdlib.h: No such file or directory #include_next stdlib.h).
+Here `-DENABLE_PRECOMPILED_HEADERS=OFF` is added, without this line of parameter might cause an error of missing _stdlib.h_ (fatal error: stdlib.h: No such file or directory #include_next stdlib.h).
 
 **2. Specify Number of Parallel Building Threads**
 
-If you are running Ubuntu 18.04 in virtual machine, it is likely that ``proc`` variable does not work, hence leading to an building error.
+If you are running Ubuntu 18.04 in virtual machine, it is likely that ``proc`` variable does not work, hence leading to a building error.
 
-Make OpenCV by explicitly specify the number of threads would address this problem, this is also recommended:
+Make OpenCV by explicitly specify the number of threads would address this problem, which is also recommended:
 
 ```
 sudo make install -j8
 ```
 
-In this case 8 threads will be used to build the project.
+In this case 8 threads will be used to build the project. Note that even you are not using an virtual machine, specify maximum threads would not violate anything.
 
 
 ### Pangolin
