@@ -10,10 +10,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Installation Updates of Sim-to-Real-Virtual-Guidance-for-Robot-Navigation | Yuhang Song | BLOG</title>
+    <title>Installation Updates of Sim-to-Real-Virtual-Guidance-for-Robot-Navigation | Yuhang Song - BLOG | 宋宇航的博客</title>
     <meta name="author" content="Yuhang  Song">
     <meta name="description" content="Additional installation steps for old repo.">
-    <meta name="keywords" content="jekyll, jekyll-theme, academic-website, portfolio-website">
+    <meta name="keywords" content="Yuhang Song, university of liverpool, national tsing hua university, 宋宇航, 英国利物浦大学, 国立清华大学, topsoft, topsoftint, topsoft 极致网络">
 
 
     <!-- Bootstrap & MDB -->
@@ -38,7 +38,7 @@
 
     <!-- Styles -->
     
-    <link rel="shortcut icon" href="data:image/svg+xml,&lt;svg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22&gt;&lt;text%20y=%22.9em%22%20font-size=%2290%22&gt;%E2%9A%9B%EF%B8%8F&lt;/text&gt;&lt;/svg&gt;">
+    <link rel="shortcut icon" href="data:image/svg+xml,&lt;svg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22&gt;&lt;text%20y=%22.9em%22%20font-size=%2290%22&gt;YH&lt;/text&gt;&lt;/svg&gt;">
     
     <link rel="stylesheet" href="/assets/css/main.css">
     <link rel="canonical" href="https://huskykingdom.github.io/blog/2023/frame_install/">
@@ -62,7 +62,7 @@
       <!-- Nav Bar -->
       <nav id="navbar" class="navbar navbar-light navbar-expand-sm fixed-top">
         <div class="container">
-          <a class="navbar-brand title font-weight-lighter" href="/">Yuhang Song | BLOG</a>
+          <a class="navbar-brand title font-weight-lighter" href="/">Yuhang Song - BLOG | 宋宇航的博客</a>
           <!-- Navbar Toggle -->
           <button class="navbar-toggler collapsed ml-auto" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="sr-only">Toggle navigation</span>
@@ -147,9 +147,9 @@
   <article class="post-content">
     
     <div id="markdown-content">
-      <p>This article provides clear instructions on how to install necessary environments for all modules in <a href="https://github.com/KaiChen1008/Sim-to-Real-Virtual-Guidance-for-Robot-Navigation" rel="external nofollow noopener" target="_blank">Sim-To-Real Navigation Robots</a> project, apart from the official <a href="https://kaichen1008.github.io/Sim-to-Real-Virtual-Guidance-for-Robot-Navigation/" rel="external nofollow noopener" target="_blank">original documentation</a> provided, since it was made in 2020, some additional corrections are needed during the installation.</p>
+      <p>This article provides clear instructions on how to install necessary environments for all modules in <a href="https://github.com/KaiChen1008/Sim-to-Real-Virtual-Guidance-for-Robot-Navigation" rel="external nofollow noopener" target="_blank">Sim-To-Real Navigation Robots</a> project, apart from the official <a href="https://kaichen1008.github.io/Sim-to-Real-Virtual-Guidance-for-Robot-Navigation/" rel="external nofollow noopener" target="_blank">original documentation</a> provided. Since it was made in 2020, some additional corrections are needed during installation.</p>
 
-<p>Moreover, there are some missing files in the original repo, they were also provided here. Note that this article will only go though the updates to the original documentation, please refer to the original documentation for full instructions.</p>
+<p>Moreover, there are some missing files in the original repo, they were also provided in this page. Note that we will only go though the updates to the original documentation, please refer to the original documentation for full instructions.</p>
 
 <h2 id="orb-slam2-installation">ORB-SLAM2 Installation</h2>
 
@@ -169,18 +169,18 @@
       -DENABLE_PRECOMPILED_HEADERS=OFF
 </code></pre></div></div>
 
-<p><code class="language-plaintext highlighter-rouge">-DENABLE_PRECOMPILED_HEADERS=OFF</code> is added, without this line of parameter might result in error of missing <em>stdlib.h</em> (fatal error: stdlib.h: No such file or directory #include_next stdlib.h).</p>
+<p>Here <code class="language-plaintext highlighter-rouge">-DENABLE_PRECOMPILED_HEADERS=OFF</code> is added, without this line of parameter might cause an error of missing <em>stdlib.h</em> (fatal error: stdlib.h: No such file or directory #include_next stdlib.h).</p>
 
 <p><strong>2. Specify Number of Parallel Building Threads</strong></p>
 
-<p>If you are running Ubuntu 18.04 in virtual machine, it is likely that <code class="language-plaintext highlighter-rouge">proc</code> variable does not work, hence leading to an building error.</p>
+<p>If you are running Ubuntu 18.04 in virtual machine, it is likely that <code class="language-plaintext highlighter-rouge">proc</code> variable does not work, hence leading to a building error.</p>
 
-<p>Make OpenCV by explicitly specify the number of threads would address this problem, this is also recommended:</p>
+<p>Make OpenCV by explicitly specify the number of threads would address this problem, which is also recommended:</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo make install -j8
 </code></pre></div></div>
 
-<p>In this case 8 threads will be used to build the project.</p>
+<p>In this case 8 threads will be used to build the project. Note that even you are not using an virtual machine, specify maximum threads would not violate anything.</p>
 
 <h3 id="pangolin">Pangolin</h3>
 
@@ -249,7 +249,7 @@ ${PROJECT_SOURCE_DIR}/../../../lib/libORB_SLAM2.so
     <!-- Footer -->    
     <footer class="fixed-bottom">
       <div class="container mt-0">
-        © Copyright 2023 Yuhang  Song. Powered by <a href="https://jekyllrb.com/" target="_blank" rel="external nofollow noopener">Jekyll</a> with <a href="https://github.com/alshedivat/al-folio" rel="external nofollow noopener" target="_blank">al-folio</a> theme. Hosted by <a href="https://pages.github.com/" target="_blank" rel="external nofollow noopener">GitHub Pages</a>. Photos from <a href="https://unsplash.com" target="_blank" rel="external nofollow noopener">Unsplash</a>.
+        © Copyright 2023 Yuhang  Song. Powered by <a href="https://github.com/alshedivat/al-folio" rel="external nofollow noopener" target="_blank">al-folio</a> theme.
 
       </div>
     </footer>

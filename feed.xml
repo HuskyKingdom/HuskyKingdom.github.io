@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="https://huskykingdom.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://huskykingdom.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2023-07-02T12:28:08+00:00</updated><id>https://huskykingdom.github.io/feed.xml</id><title type="html">Yuhang Song | BLOG</title><subtitle>A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
-</subtitle><entry><title type="html">Installation Updates of Sim-to-Real-Virtual-Guidance-for-Robot-Navigation</title><link href="https://huskykingdom.github.io/blog/2023/frame_install/" rel="alternate" type="text/html" title="Installation Updates of Sim-to-Real-Virtual-Guidance-for-Robot-Navigation" /><published>2023-07-02T04:00:00+00:00</published><updated>2023-07-02T04:00:00+00:00</updated><id>https://huskykingdom.github.io/blog/2023/frame_install</id><content type="html" xml:base="https://huskykingdom.github.io/blog/2023/frame_install/"><![CDATA[<p>This article provides clear instructions on how to install necessary environments for all modules in <a href="https://github.com/KaiChen1008/Sim-to-Real-Virtual-Guidance-for-Robot-Navigation">Sim-To-Real Navigation Robots</a> project, apart from the official <a href="https://kaichen1008.github.io/Sim-to-Real-Virtual-Guidance-for-Robot-Navigation/">original documentation</a> provided, since it was made in 2020, some additional corrections are needed during the installation.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.3.2">Jekyll</generator><link href="https://huskykingdom.github.io/feed.xml" rel="self" type="application/atom+xml" /><link href="https://huskykingdom.github.io/" rel="alternate" type="text/html" hreflang="en" /><updated>2023-07-02T15:10:58+00:00</updated><id>https://huskykingdom.github.io/feed.xml</id><title type="html">Yuhang Song - BLOG | 宋宇航的博客</title><subtitle>Yuhang Song Personal BLOG, Ph.D. student in University of LIverpool and National Tsing Hua University, Founder of TOPSOFT INT.  宋宇航个人博客， 英国利物浦大学 &amp; 国立清华大学博士生在读， TOPSOFT INT 创始人。
+</subtitle><entry><title type="html">Installation Updates of Sim-to-Real-Virtual-Guidance-for-Robot-Navigation</title><link href="https://huskykingdom.github.io/blog/2023/frame_install/" rel="alternate" type="text/html" title="Installation Updates of Sim-to-Real-Virtual-Guidance-for-Robot-Navigation" /><published>2023-07-02T04:00:00+00:00</published><updated>2023-07-02T04:00:00+00:00</updated><id>https://huskykingdom.github.io/blog/2023/frame_install</id><content type="html" xml:base="https://huskykingdom.github.io/blog/2023/frame_install/"><![CDATA[<p>This article provides clear instructions on how to install necessary environments for all modules in <a href="https://github.com/KaiChen1008/Sim-to-Real-Virtual-Guidance-for-Robot-Navigation">Sim-To-Real Navigation Robots</a> project, apart from the official <a href="https://kaichen1008.github.io/Sim-to-Real-Virtual-Guidance-for-Robot-Navigation/">original documentation</a> provided. Since it was made in 2020, some additional corrections are needed during installation.</p>
 
-<p>Moreover, there are some missing files in the original repo, they were also provided here. Note that this article will only go though the updates to the original documentation, please refer to the original documentation for full instructions.</p>
+<p>Moreover, there are some missing files in the original repo, they were also provided in this page. Note that we will only go though the updates to the original documentation, please refer to the original documentation for full instructions.</p>
 
 <h2 id="orb-slam2-installation">ORB-SLAM2 Installation</h2>
 
@@ -21,18 +21,18 @@
       -DENABLE_PRECOMPILED_HEADERS=OFF
 </code></pre></div></div>
 
-<p><code class="language-plaintext highlighter-rouge">-DENABLE_PRECOMPILED_HEADERS=OFF</code> is added, without this line of parameter might result in error of missing <em>stdlib.h</em> (fatal error: stdlib.h: No such file or directory #include_next stdlib.h).</p>
+<p>Here <code class="language-plaintext highlighter-rouge">-DENABLE_PRECOMPILED_HEADERS=OFF</code> is added, without this line of parameter might cause an error of missing <em>stdlib.h</em> (fatal error: stdlib.h: No such file or directory #include_next stdlib.h).</p>
 
 <p><strong>2. Specify Number of Parallel Building Threads</strong></p>
 
-<p>If you are running Ubuntu 18.04 in virtual machine, it is likely that <code class="language-plaintext highlighter-rouge">proc</code> variable does not work, hence leading to an building error.</p>
+<p>If you are running Ubuntu 18.04 in virtual machine, it is likely that <code class="language-plaintext highlighter-rouge">proc</code> variable does not work, hence leading to a building error.</p>
 
-<p>Make OpenCV by explicitly specify the number of threads would address this problem, this is also recommended:</p>
+<p>Make OpenCV by explicitly specify the number of threads would address this problem, which is also recommended:</p>
 
 <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo make install -j8
 </code></pre></div></div>
 
-<p>In this case 8 threads will be used to build the project.</p>
+<p>In this case 8 threads will be used to build the project. Note that even you are not using an virtual machine, specify maximum threads would not violate anything.</p>
 
 <h3 id="pangolin">Pangolin</h3>
 
