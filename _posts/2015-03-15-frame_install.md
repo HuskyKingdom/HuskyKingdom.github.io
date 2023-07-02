@@ -42,7 +42,7 @@ Here `-DENABLE_PRECOMPILED_HEADERS=OFF` is added, without this line of parameter
 
 If you are running Ubuntu 18.04 in virtual machine, it is likely that ``proc`` variable does not work, hence leading to a building error.
 
-Make OpenCV by explicitly specify the number of threads would address this problem, which is also recommended:
+Install OpenCV by explicitly specify the number of threads would address this problem, which is also recommended:
 
 ```
 sudo make install -j8
