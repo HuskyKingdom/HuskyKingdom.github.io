@@ -10,9 +10,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Installation Updates of Sim-to-Real-Virtual-Guidance-for-Robot-Navigation | Yuhang Song | BLOG</title>
+    <title>tutorial | Yuhang Song | BLOG</title>
     <meta name="author" content="Yuhang  Song">
-    <meta name="description" content="Additional installation steps for old repo.">
+    <meta name="description" content="A simple, whitespace theme for academics. Based on [*folio](https://github.com/bogoli/-folio) design.
+">
     <meta name="keywords" content="jekyll, jekyll-theme, academic-website, portfolio-website">
 
 
@@ -32,16 +33,13 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jwarby/jekyll-pygments-themes@master/github.css" media="" id="highlight_theme_light">
 
     
-    <!-- Sidebar Table of Contents -->
-    <link href="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.css" rel="stylesheet">
-    
 
     <!-- Styles -->
     
     <link rel="shortcut icon" href="data:image/svg+xml,&lt;svg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22&gt;&lt;text%20y=%22.9em%22%20font-size=%2290%22&gt;%E2%9A%9B%EF%B8%8F&lt;/text&gt;&lt;/svg&gt;">
     
     <link rel="stylesheet" href="/assets/css/main.css">
-    <link rel="canonical" href="https://huskykingdom.github.io/blog/2023/frame_install/">
+    <link rel="canonical" href="https://huskykingdom.github.io/blog/category/tutorial/">
 
     <!-- Dark Mode -->
     
@@ -119,130 +117,30 @@
     <!-- Content -->
     <div class="container mt-5">
       
-        
-        <div class="row">
-          <!-- sidebar, which will move to the top on a small screen -->
-          <div class="col-sm-3">
-            <nav id="toc-sidebar" class="sticky-top"></nav>
-          </div>
-          <!-- main content area -->
-          <div class="col-sm-9">
-            <!-- _layouts/post.html -->
-
-<div class="post">
+        <div class="post">
 
   <header class="post-header">
-    <h1 class="post-title">Installation Updates of Sim-to-Real-Virtual-Guidance-for-Robot-Navigation</h1>
-    <p class="post-meta">July 2, 2023</p>
-    <p class="post-tags">
-      <a href="/blog/2023"> <i class="fas fa-calendar fa-sm"></i> 2023 </a>
-        ·  
-        <a href="/blog/category/tutorial">
-          <i class="fas fa-tag fa-sm"></i> tutorial</a>  
-          
-
-    </p>
+    <h1 class="post-title"> <i class="fas fa-tag fa-sm"></i> tutorial </h1>
+    <p class="post-description"> an archive of posts in this category </p>
   </header>
 
-  <article class="post-content">
-    
-    <div id="markdown-content">
-      <p>The article provides clear instructions on how to install necessary environments for all modules in <a href="https://github.com/KaiChen1008/Sim-to-Real-Virtual-Guidance-for-Robot-Navigation" rel="external nofollow noopener" target="_blank">Sim-To-Real Navigation Robots</a> project, apart from the official <a href="https://kaichen1008.github.io/Sim-to-Real-Virtual-Guidance-for-Robot-Navigation/" rel="external nofollow noopener" target="_blank">original documentation</a> provided, since it was made in 2020, some additional corrections are needed during the installation.</p>
-
-<p>Moreover, there are some missing files in the original repo, they were also provided here. Note that this article will only go though the updates to the original documentation, please refer to the original documentation for full instructions.</p>
-
-<h2 id="orb-slam2-installation">ORB-SLAM2 Installation</h2>
-
-<hr>
-
-<h3 id="opencv-32">OpenCV 3.2</h3>
-
-<p><strong>1. Missing stdlib.h</strong></p>
-
-<p>In section 3.3, change the original build &amp; install command into the following:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>cmake -DCMAKE_BUILD_TYPE=Release \
-      -DWITH_CUDA=OFF \
-      -DCMAKE_INSTALL_PREFIX=/usr/local/opencv-${CV3_RELEASE} \
-      -DOPENCV_EXTRA_MODULES_PATH=/tmp/opencv_contrib/modules \
-      /tmp/opencv
-      -DENABLE_PRECOMPILED_HEADERS=OFF
-</code></pre></div></div>
-
-<p><code class="language-plaintext highlighter-rouge">-DENABLE_PRECOMPILED_HEADERS=OFF</code> is added, without this line of parameter might result in error of missing <em>stdlib.h</em> (fatal error: stdlib.h: No such file or directory #include_next stdlib.h).</p>
-
-<p><strong>2. Specify Number of Parallel Building Threads</strong></p>
-
-<p>If you are running Ubuntu 18.04 in virtual machine, it is likely that <code class="language-plaintext highlighter-rouge">proc</code> variable does not work, hence leading to an building error.</p>
-
-<p>Make OpenCV by explicitly specify the number of threads would address this problem, this is also recommended:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sudo make install -j8
-</code></pre></div></div>
-
-<p>In this case 8 threads will be used to build the project.</p>
-
-<h3 id="pangolin">Pangolin</h3>
-
-<p>Do not just clone the Pangolin repo directly, Pangolin has several upgrades to the new version, which were made compilable with C++ 17. However, C++ 17 is not installed in Ubuntu 18.04 by default, install latest version of Pangolin in lower version C++ will cause error [Pangolin could not be found because dependency Eigen3 could not be found.].</p>
-
-<p>Download Pangolin v0.5 <a href="https://github.com/stevenlovegrove/Pangolin/tags" rel="external nofollow noopener" target="_blank">here</a> and build &amp; install it as detailed in original instruction.</p>
-
-<p>Make sure you specify threads while building Pangolin if needed.</p>
-
-<h3 id="install-orb-slam2">Install ORB-SLAM2</h3>
-
-<p>Clone the repo to your local environment first as instructed by the original documentation. Copy <em>modified_ORB_SLAM2</em> folder in <em>localization_module</em> folder to the <code class="language-plaintext highlighter-rouge">src</code> directory of your ROS workspace, and rename it to <em>ORB_SLAM2</em>.</p>
-
-<p>In additional, you must do the following first <strong>before</strong> build ORB-SLAM2.</p>
-
-<p><strong>1. Missing tar file</strong></p>
-
-<p>In <em>built.bash</em>, file <em>ORBvoc.txt.tar.gz</em> is referenced but not provided. Download the file <a href="https://github.com/raulmur/ORB_SLAM2/blob/master/Vocabulary/ORBvoc.txt.tar.gz" rel="external nofollow noopener" target="_blank">here</a> and put it into <em>ORB-SLAM2/Vocabulary/</em>.</p>
-
-<p><strong>2. Missing Examples Folder</strong></p>
-
-<p>The original <strong>Examples</strong> folder provided is not complete. Replace the whole folder with the one appears in <a href="https://github.com/raulmur/ORB_SLAM2/tree/master/Examples" rel="external nofollow noopener" target="_blank">this repo.</a></p>
-
-<p><strong>3. Update CMakeList.txt</strong></p>
-
-<p>Update <em>CMakeList.txt</em> in <em>ORB_SLAM2_Examples/ROS/ORB_SLAM2/</em> by adding a boost library line <code class="language-plaintext highlighter-rouge">-lboost_syste</code> into the library section:</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>set(LIBS
-${OpenCV_LIBS}
-${EIGEN3_LIBS}
-${Pangolin_LIBRARIES}
-${PROJECT_SOURCE_DIR}/../../../Thirdparty/DBoW2/lib/libDBoW2.so
-${PROJECT_SOURCE_DIR}/../../../Thirdparty/g2o/lib/libg2o.so
-${PROJECT_SOURCE_DIR}/../../../lib/libORB_SLAM2.so
--lboost_system
-)
-
-</code></pre></div></div>
-
-<p>Now you can build &amp; install ORB-SLAM2 and ORB-SLAM2 node as instructed by the original documentation.</p>
-
-
-    </div>
-  </article><div id="disqus_thread" style="max-width: 800px; margin: 0 auto;">
-    <script type="text/javascript">
-        var disqus_shortname  = 'al-folio';
-        var disqus_identifier = '/blog/2023/frame_install';
-        var disqus_title      = "Installation Updates of Sim-to-Real-Virtual-Guidance-for-Robot-Navigation";
-        (function() {
-        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
-        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
-        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
-        })();
-    </script>
-    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript" rel="external nofollow noopener" target="_blank">comments powered by Disqus.</a>
-</noscript>
-</div>
-</div>
-
-          </div>
-        </div>
+  <article>
+    <div class="table-responsive">
+      <table class="table table-sm table-borderless">
         
+        <tr>
+          <th scope="row">Jul 2, 2023</th>
+          <td>
+              <a class="post-link" href="/blog/2023/frame_install/">Installation Updates of Sim-to-Real-Virtual-Guidance-for-Robot-Navigation</a>
+          </td>
+        </tr>
+      
+      </table>
+    </div>
+  </article>
+
+</div>
+
       
     </div>
 
@@ -270,9 +168,6 @@ ${PROJECT_SOURCE_DIR}/../../../lib/libORB_SLAM2.so
   <!-- Medium Zoom JS -->
   <script defer src="https://cdn.jsdelivr.net/npm/medium-zoom@1.0.8/dist/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
   <script defer src="/assets/js/zoom.js"></script>
-  <!-- Sidebar Table of Contents -->
-  <script defer src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script>
-
 
   <!-- Bootstrap Table -->
   <script defer src="https://unpkg.com/bootstrap-table@1.21.4/dist/bootstrap-table.min.js"></script>
