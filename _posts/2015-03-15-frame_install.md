@@ -2,8 +2,8 @@
 layout: post
 title:  Installation Updates of Sim-to-Real-Virtual-Guidance-for-Robot-Navigation
 date: 2023-07-02 00:00:00-0400
-description: PPO, AC
-categories: studynote
+description: Additional installation steps for old repo.
+categories: tutorial
 tags: 
 disqus_comments: true
 related_posts: false
