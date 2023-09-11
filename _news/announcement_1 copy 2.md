@@ -5,4 +5,4 @@ inline: true
 related_posts: false
 ---
 
-Started my journey on learning ROS 1 & 2, perparing working on embodied Husky robots.
+Started my journey on learning ROS 1 & 2, preparing working on embodied Husky robots.

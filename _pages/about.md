@@ -23,7 +23,7 @@ Hi there !
 
 I am currently a Ph.D. student at University of Liverpool & National Tsing Hua University.
 
-Reseacher of [SmartLab](https://smartlab.csc.liv.ac.uk/) in [Digital Innovation Facility (DIF)](https://digitalinnovationfacility.com/).
+Reseacher of [SmartLab](https://smartlab.csc.liv.ac.uk/) in [Digital Innovation Facility (DIF)](https://digitalinnovationfacility.com/) and ELSA lab (https://elsalab.ai/).
 
 I have founded [TOPSOFT Group](https://www.topsoftint.com/) in 2016, an international organization for computer science.
 

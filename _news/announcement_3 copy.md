@@ -6,4 +6,4 @@ related_posts: false
 ---
 
 
-I serve as module demonstrator for COM 341 in uni.
+I serve as module demonstrator for COM 341 in UoL.
