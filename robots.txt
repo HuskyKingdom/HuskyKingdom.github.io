@@ -1,4 +1,4 @@
 User-agent: *
 Disallow:
 
-Sitemap: https://HuskyKingdom.github.io/sitemap.xml
+Sitemap: https://yhscode.com/sitemap.xml
