@@ -23,9 +23,7 @@ Hi there !
 
 I am currently a Ph.D. student at University of Liverpool & National Tsing Hua University.
 
-Reseacher of [SmartLab](https://smartlab.csc.liv.ac.uk/) in [Digital Innovation Facility (DIF)](https://digitalinnovationfacility.com/) and [ELSA Lab](https://elsalab.ai/).
-
-I have founded [TOPSOFT Group](https://www.topsoftint.com/) in 2016, an international organization for computer science.
+Reseacher of [airvLab](https://smartlab.csc.liv.ac.uk/) in [Digital Innovation Facility (DIF)](https://digitalinnovationfacility.com/) and [ELSA Lab](https://elsalab.ai/) in NTHU. I have founded [TOPSOFT Group](https://www.topsoftint.com/) in 2016, an international organization for computer science.
 
 My research interests includes **Deep Learning**, **Deep Reinforcement Learning** and **Autonomous Systems**. I aim to build end-to-end robust navigation agent and make it accessable in physical world via remarkable efficiency.
 
