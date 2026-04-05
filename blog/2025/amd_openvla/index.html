@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <!-- Head -->
+  <head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">    <!-- Metadata, OpenGraph and Schema.org -->
+    
+
+    <!-- Standard metadata -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Running OpenVLA Evaluation (LIBERO) on AMD Servers | Yuhang  Song</title>
+    <meta name="author" content="Yuhang  Song">
+    <meta name="description" content="This guide provides a standardized operating procedure (SOP) for running OpenVLA robotic manipulation evaluations (LIBERO Benchmark) on AMD GPU high-performance computing (HPC) clusters using Apptainer/Singularity and SLURM.">
+    <meta name="keywords" content="Yuhang Song, university of liverpool, national tsing hua university, 宋宇航, 英国利物浦大学, 国立清华大学, topsoft, topsoftint, topsoft 极致网络">
+
+
+    <!-- Bootstrap & MDB -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-DF7Zhf293AJxJNTmh5zhoYYIMs2oXitRfBjY+9L//AY=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/css/mdb.min.css" integrity="sha256-jpjYvU3G3N6nrrBwXJoVEYI/0zw8htfFnhT9ljN3JJw=" crossorigin="anonymous">
+
+    <!-- Bootstrap Table -->
+    <link defer rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.4/dist/bootstrap-table.min.css">
+
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/academicons@1.9.1/css/academicons.min.css" integrity="sha256-i1+4qU2G2860dGGIOJscdC30s9beBXjFfzjWLjBRsBg=" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700|Roboto+Slab:100,300,400,500,700|Material+Icons">
+
+    <!-- Code Syntax Highlighting -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jwarby/jekyll-pygments-themes@master/github.css" media="" id="highlight_theme_light">
+
+    
+    <!-- Sidebar Table of Contents -->
+    <link href="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.css" rel="stylesheet">
+    
+
+    <!-- Styles -->
+    
+    <link rel="shortcut icon" href="data:image/svg+xml,&lt;svg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22&gt;&lt;text%20y=%22.9em%22%20font-size=%2290%22&gt;H&lt;/text&gt;&lt;/svg&gt;">
+    
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="canonical" href="https://yhscode.com/blog/2025/amd_openvla/">
+
+    <!-- Dark Mode -->
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jwarby/jekyll-pygments-themes@master/native.css" media="none" id="highlight_theme_dark">
+
+    <script src="/assets/js/theme.js"></script>
+    <script src="/assets/js/dark_mode.js"></script>
+    
+
+  </head>
+
+  <!-- Body -->
+  <body class="fixed-top-nav ">
+
+    <!-- Header -->
+    <header>
+
+      <!-- Nav Bar -->
+      <nav id="navbar" class="navbar navbar-light navbar-expand-sm fixed-top">
+        <div class="container">
+          <a class="navbar-brand title font-weight-lighter" href="/"><span class="font-weight-bold">Yuhang </span>Song</a>
+          <!-- Navbar Toggle -->
+          <button class="navbar-toggler collapsed ml-auto" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar top-bar"></span>
+            <span class="icon-bar middle-bar"></span>
+            <span class="icon-bar bottom-bar"></span>
+          </button>
+
+          <div class="collapse navbar-collapse text-right" id="navbarNav">
+            <ul class="navbar-nav ml-auto flex-nowrap">
+
+              <!-- About -->
+              <li class="nav-item ">
+                <a class="nav-link" href="/">About</a>
+              </li>
+              
+              <!-- Blog -->
+              <li class="nav-item active">
+                <a class="nav-link" href="/blog/">Blog<span class="sr-only">(current)</span></a>
+              </li>
+
+              <!-- Other pages -->
+              <li class="nav-item ">
+                <a class="nav-link" href="/publications/">Publications</a>
+              </li>
+              <li class="nav-item ">
+                <a class="nav-link" href="/projects/">Projects</a>
+              </li>
+              <li class="nav-item ">
+                <a class="nav-link" href="/cv/">Curriculum Vitae</a>
+              </li>
+
+              <!-- Toogle theme mode -->
+              <li class="toggle-container">
+                <button id="light-toggle" title="Change theme">
+                  <i class="fas fa-moon"></i>
+                  <i class="fas fa-sun"></i>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+      <!-- Scrolling Progress Bar -->
+      <progress id="progress" value="0">
+        <div class="progress-container">
+          <span class="progress-bar"></span>
+        </div>
+      </progress>
+    </header>
+
+
+    <!-- Content -->
+    <div class="container mt-5">
+      
+        
+        <div class="row">
+          <!-- sidebar, which will move to the top on a small screen -->
+          <div class="col-sm-3">
+            <nav id="toc-sidebar" class="sticky-top"></nav>
+          </div>
+          <!-- main content area -->
+          <div class="col-sm-9">
+            <!-- _layouts/post.html -->
+
+<div class="post">
+
+  <header class="post-header">
+    <h1 class="post-title">Running OpenVLA Evaluation (LIBERO) on AMD Servers</h1>
+    <p class="post-meta">October 16, 2025</p>
+    <p class="post-tags">
+      <a href="/blog/2025"> <i class="fas fa-calendar fa-sm"></i> 2025 </a>
+        ·  
+        <a href="/blog/tag/amd">
+          <i class="fas fa-hashtag fa-sm"></i> amd,</a>  
+          <a href="/blog/tag/openvla">
+          <i class="fas fa-hashtag fa-sm"></i> openvla,</a>  
+          <a href="/blog/tag/embodiedai">
+          <i class="fas fa-hashtag fa-sm"></i> embodiedai</a>  
+          
+        ·  
+        <a href="/blog/category/tutorial">
+          <i class="fas fa-tag fa-sm"></i> tutorial</a>  
+          
+
+    </p>
+  </header>
+
+  <article class="post-content">
+    
+    <div id="markdown-content">
+      <h1 id="-running-openvla-evaluation-libero-on-amd-servers">🚀 Running OpenVLA Evaluation (LIBERO) on AMD Servers</h1>
+
+<p>This guide provides a standardized operating procedure (SOP) for running OpenVLA robotic manipulation evaluations (LIBERO Benchmark) on AMD GPU high-performance computing (HPC) clusters using Apptainer/Singularity and SLURM.</p>
+
+<hr>
+
+<h2 id="step-1-workspace-preparation">Step 1: Workspace Preparation</h2>
+
+<p>Clone the necessary repositories into your workspace root (e.g., <code class="language-plaintext highlighter-rouge">/work1/username/workspace</code>).</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. Clone OpenVLA (or your custom fork, e.g., openvla-oft-yhs)</span>
+git clone <span class="o">[</span>https://github.com/moojink/openvla-oft.git]<span class="o">(</span>https://github.com/moojink/openvla-oft.git<span class="o">)</span>
+
+<span class="c"># 2. Clone LIBERO Benchmark</span>
+git clone <span class="o">[</span>https://github.com/Lifelong-Robot-Learning/LIBERO.git]<span class="o">(</span>https://github.com/Lifelong-Robot-Learning/LIBERO.git<span class="o">)</span>
+</code></pre></div></div>
+
+<hr>
+
+<h2 id="step-2-build-the-bulletproof-apptainer-image">Step 2: Build the Bulletproof Apptainer Image</h2>
+
+<p>We consolidate all fragmented dependencies into a single Apptainer definition file to create a plug-and-play environment.</p>
+
+<h3 id="1-create-openvla_rocmdef">1. Create <code class="language-plaintext highlighter-rouge">openvla_rocm.def</code>
+</h3>
+<p>Create this file in your root directory and paste the following content:</p>
+
+<pre><code class="language-apptainer">Bootstrap: docker
+From: rocm/primus:v26.1
+
+%environment
+    export PATH="/opt/ompi/bin:/opt/ucx/bin:/opt/rocm/bin:$PATH"
+    export LD_LIBRARY_PATH="/usr/local/lib:/opt/rocm/lib:/opt/ompi/lib:/opt/ucx/lib:/usr/lib64:/usr/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu/libibverbs:$LD_LIBRARY_PATH"
+    
+    # CRITICAL: Headless rendering settings for LIBERO
+    export MUJOCO_GL=osmesa
+    export PYOPENGL_PLATFORM=osmesa
+    export ROBOT_PLATFORM=LIBERO
+    
+    export NUMBA_DISABLE_JIT=1
+    export TOKENIZERS_PARALLELISM=false
+
+%post
+    # 1. System dependencies &amp; OSMesa rendering libraries
+    apt-get update
+    apt-get install -y  \
+            librdmacm1 libibverbs-dev libibverbs1 ibverbs-providers ibverbs-utils rdma-core \
+            git cmake gcc g++ make automake autoconf libtool \
+            pkg-config numactl libnuma-dev librdmacm-dev \
+            flex bison wget curl libdrm-dev libibumad-dev \
+            pciutils ethtool libpci-dev \
+            libegl1-mesa-dev libgles2-mesa-dev \
+            libosmesa6 libosmesa6-dev libegl1-mesa libgl1-mesa-glx libgles2-mesa
+
+    # Fix potential ROCm RDMA driver conflicts
+    mv /usr/lib/x86_64-linux-gnu/libibverbs/libbnxt_re-rdmav34.so /usr/lib/x86_64-linux-gnu/libibverbs/libbnxt_re-rdmav34.so.inbox 2&gt;/dev/null || true
+    ldconfig
+
+    # 2. Basic tools (replace GUI-based OpenCV with headless)
+    pip3 uninstall -y opencv-python || true
+    pip3 install opencv-python-headless==4.11.0.86 packaging ninja torchvision torchaudio
+
+    # 3. Core LLM/VLM dependencies
+    pip3 install transformers==4.40.1 tokenizers==0.19.1 timm==0.9.16
+    pip3 install draccus==0.8.0 "sentencepiece&gt;=0.1.99" json-numpy tensorflow-cpu==2.15.1
+
+    # 4. Install LIBERO Environment
+    cd /
+    git clone [https://github.com/Lifelong-Robot-Learning/LIBERO.git](https://github.com/Lifelong-Robot-Learning/LIBERO.git)
+    touch LIBERO/libero/__init__.py
+    pip3 install -e LIBERO
+    pip3 install "imageio[ffmpeg]" robosuite==1.4.1 bddl easydict cloudpickle gym
+
+    # Pre-create LIBERO config to avoid runtime CLI prompts
+    mkdir -p /root/.libero
+    python3 -c "
+import os, yaml
+root = '/LIBERO/libero/libero'
+config = {
+    'benchmark_root': root,
+    'bddl_files': os.path.join(root, 'bddl_files'),
+    'init_states': os.path.join(root, 'init_files'),
+    'datasets': os.path.join(root, '../datasets'),
+    'assets': os.path.join(root, 'assets'),
+}
+with open('/root/.libero/config.yaml', 'w') as f:
+    yaml.dump(config, f)
+"
+
+    # 5. Install OpenVLA
+    cd /
+    git clone [https://github.com/moojink/openvla-oft.git](https://github.com/moojink/openvla-oft.git)
+    cd openvla-oft
+    pip3 install -e . --no-deps
+    pip3 install -r experiments/robot/libero/libero_requirements.txt 
+
+    # 6. Ultimate Dependency Fix: Overwrite conflicting packages
+    echo "=== Force installing robust versions ==="
+    pip3 install -U transformers==4.44.0 peft==0.17.0 diffusers==0.30.2
+    pip3 install tensorflow-datasets tensorflow-graphics jsonlines
+    
+    # Strictly lock Numpy and ml_dtypes to prevent C-API crashes; Install authentic dlimp from GitHub
+    pip3 install --no-deps --force-reinstall ml_dtypes==0.3.1 numpy==1.24.4 git+[https://github.com/kvablack/dlimp.git](https://github.com/kvablack/dlimp.git)
+
+%help
+    OpenVLA-OFT environment fixed for AMD ROCm &amp; LIBERO.
+</code></pre>
+
+<h3 id="2-build-the-image">2. Build the Image</h3>
+<p><strong>CRITICAL:</strong> HPC login nodes usually have very restricted <code class="language-plaintext highlighter-rouge">/tmp</code> storage. You must redirect Apptainer’s cache and temporary directories to your high-capacity storage (e.g., <code class="language-plaintext highlighter-rouge">/work1/</code>) before building, otherwise the build will crash with a <code class="language-plaintext highlighter-rouge">stream error</code>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Redirect temp directories to high-capacity storage</span>
+<span class="nb">export </span><span class="nv">APPTAINER_TMPDIR</span><span class="o">=</span>/path/to/your/large/storage/apptainer_tmp
+<span class="nb">export </span><span class="nv">APPTAINER_CACHEDIR</span><span class="o">=</span>/path/to/your/large/storage/apptainer_cache
+<span class="nb">mkdir</span> <span class="nt">-p</span> <span class="nv">$APPTAINER_TMPDIR</span> <span class="nv">$APPTAINER_CACHEDIR</span>
+
+<span class="c"># Clean old cache and build</span>
+apptainer cache clean <span class="nt">--force</span>
+apptainer build openvla_rocm.sif openvla_rocm.def
+</code></pre></div></div>
+
+<hr>
+
+<h2 id="step-3-source-code-patches">Step 3: Source Code Patches</h2>
+
+<p>Before running the evaluation, you must apply two minor patches to the Python script located at <code class="language-plaintext highlighter-rouge">openvla-oft/experiments/robot/libero/run_libero_eval.py</code>.</p>
+
+<h3 id="patch-1-bypass-pytorch-26-weights_only-restriction">Patch 1: Bypass PyTorch 2.6 <code class="language-plaintext highlighter-rouge">weights_only</code> Restriction</h3>
+<p>PyTorch 2.6 enforces <code class="language-plaintext highlighter-rouge">weights_only=True</code> by default, which blocks the loading of LIBERO’s initial state files (<code class="language-plaintext highlighter-rouge">.init</code>). 
+Open <code class="language-plaintext highlighter-rouge">run_libero_eval.py</code> and inject the following patch immediately after <code class="language-plaintext highlighter-rouge">import torch</code> at the top of the file:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">torch</span>
+
+<span class="c1"># ================= PATCH START =================
+# Bypass PyTorch 2.6 weights_only restriction to load LIBERO states
+</span><span class="n">_original_load</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">load</span>
+<span class="k">def</span> <span class="nf">_patched_load</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">kwargs</span><span class="p">.</span><span class="nf">setdefault</span><span class="p">(</span><span class="sh">'</span><span class="s">weights_only</span><span class="sh">'</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nf">_original_load</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="n">torch</span><span class="p">.</span><span class="n">load</span> <span class="o">=</span> <span class="n">_patched_load</span>
+<span class="c1"># ================= PATCH END =================
+</span></code></pre></div></div>
+
+<h3 id="patch-2-remove-redundant-arguments-for-custom-forks-only">Patch 2: Remove Redundant Arguments (For custom forks only)</h3>
+<p>If you are using a custom/modified branch (like <code class="language-plaintext highlighter-rouge">openvla-oft-yhs</code>) and encounter a <code class="language-plaintext highlighter-rouge">TypeError: get_action() got an unexpected keyword argument 'h_head'</code>, locate the <code class="language-plaintext highlighter-rouge">get_action()</code> call inside the episode loop (around line 360) and remove or comment out the <code class="language-plaintext highlighter-rouge">h_head=...</code> argument.</p>
+
+<hr>
+
+<h2 id="step-4-slurm-submission-script-slurmsh">Step 4: SLURM Submission Script (<code class="language-plaintext highlighter-rouge">slurm.sh</code>)</h2>
+
+<p>Create your SLURM submission script (<code class="language-plaintext highlighter-rouge">slurm.sh</code>). Pay special attention to the <code class="language-plaintext highlighter-rouge">--bind</code> mounts to ensure the container can access your datasets located outside the repository folder.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+<span class="c">#SBATCH --job-name=eval-openvla-libero</span>
+<span class="c">#SBATCH --partition=mi3508x       # Replace with your specific partition</span>
+<span class="c">#SBATCH --nodes=1</span>
+<span class="c">#SBATCH --ntasks-per-node=1</span>
+<span class="c">#SBATCH --gres=gpu:1              # Evaluation only requires 1 GPU</span>
+<span class="c">#SBATCH --cpus-per-task=60 </span>
+<span class="c">#SBATCH --time=5:00:00</span>
+<span class="c">#SBATCH --output=slurm/logs/eval_openvla_libero_%j.out</span>
+<span class="c">#SBATCH --error=slurm/logs/eval_openvla_libero_%j.err</span>
+
+<span class="nb">set</span> <span class="nt">-ex</span>
+
+<span class="c"># 1. Paths (Adjust REPO_ROOT to your workspace path)</span>
+<span class="nv">REPO_ROOT</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">SLURM_SUBMIT_DIR</span><span class="k">}</span><span class="s2">"</span>
+<span class="nv">APPTAINER_IMAGE</span><span class="o">=</span><span class="s2">"</span><span class="nv">$REPO_ROOT</span><span class="s2">/openvla_rocm.sif"</span>
+
+<span class="c"># 2. Evaluation Config</span>
+<span class="nv">PRETRAINED_CHECKPOINT</span><span class="o">=</span><span class="s2">"moojink/openvla-7b-oft-finetuned-libero-spatial"</span>
+<span class="nv">EVAL_SCRIPT</span><span class="o">=</span><span class="s2">"openvla-oft/experiments/robot/libero/run_libero_eval.py"</span>
+<span class="nv">DATASET_NAME</span><span class="o">=</span><span class="s2">"libero_spatial"</span>
+
+<span class="c"># 3. Runtime Environment (Headless Rendering &amp; GPU Isolation)</span>
+<span class="nb">export </span><span class="nv">ROBOT_PLATFORM</span><span class="o">=</span><span class="s2">"LIBERO"</span>
+<span class="nb">export </span><span class="nv">MUJOCO_GL</span><span class="o">=</span><span class="s2">"osmesa"</span>
+<span class="nb">export </span><span class="nv">PYOPENGL_PLATFORM</span><span class="o">=</span><span class="s2">"osmesa"</span>
+<span class="nb">export </span><span class="nv">EGL_PLATFORM</span><span class="o">=</span><span class="s2">"surfaceless"</span>
+<span class="nb">export </span><span class="nv">HIP_VISIBLE_DEVICES</span><span class="o">=</span><span class="s2">"0"</span>
+
+<span class="c"># Redirect HuggingFace &amp; Triton caches into the workspace</span>
+<span class="nb">export </span><span class="nv">NUMBA_CACHE_DIR</span><span class="o">=</span><span class="s2">"</span><span class="nv">$REPO_ROOT</span><span class="s2">/.cache/numba"</span>
+<span class="nb">export </span><span class="nv">HF_CACHE_DIR</span><span class="o">=</span><span class="s2">"</span><span class="nv">$REPO_ROOT</span><span class="s2">/.cache/huggingface"</span>
+<span class="nb">export </span><span class="nv">TRITON_CACHE_DIR</span><span class="o">=</span><span class="s2">"</span><span class="nv">$REPO_ROOT</span><span class="s2">/.cache/triton"</span>
+<span class="nb">mkdir</span> <span class="nt">-p</span> <span class="s2">"</span><span class="nv">$NUMBA_CACHE_DIR</span><span class="s2">"</span> <span class="s2">"</span><span class="nv">$HF_CACHE_DIR</span><span class="s2">"</span> <span class="s2">"</span><span class="nv">$TRITON_CACHE_DIR</span><span class="s2">"</span>
+
+<span class="nb">export </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="s2">"/usr/local/lib:/opt/rocm/lib:/opt/ompi/lib:/opt/ucx/lib:/usr/lib64:/usr/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu/libibverbs"</span>
+
+<span class="c"># 4. Command to run inside the container</span>
+<span class="nv">INNER_CMD</span><span class="o">=</span><span class="s2">"set -ex; </span><span class="se">\</span><span class="s2">
+cd </span><span class="se">\"</span><span class="nv">$REPO_ROOT</span><span class="se">\"</span><span class="s2">; </span><span class="se">\</span><span class="s2">
+python -u </span><span class="se">\"</span><span class="nv">$EVAL_SCRIPT</span><span class="se">\"</span><span class="s2"> </span><span class="se">\</span><span class="s2">
+  --pretrained_checkpoint </span><span class="se">\"</span><span class="nv">$PRETRAINED_CHECKPOINT</span><span class="se">\"</span><span class="s2"> </span><span class="se">\</span><span class="s2">
+  --task_suite_name </span><span class="se">\"</span><span class="nv">$DATASET_NAME</span><span class="se">\"</span><span class="s2">"</span>
+
+<span class="c"># 5. Run Apptainer Container</span>
+<span class="c"># CRITICAL: Ensure you --bind the parent directory where your LIBERO benchmarks/datasets are located (e.g., /work1/username/)</span>
+apptainer run <span class="se">\</span>
+  <span class="nt">--cleanenv</span> <span class="se">\</span>
+  <span class="nt">--writable-tmpfs</span> <span class="se">\</span>
+  <span class="nt">--env</span> <span class="s2">"ROBOT_PLATFORM=</span><span class="nv">$ROBOT_PLATFORM</span><span class="s2">"</span> <span class="se">\</span>
+  <span class="nt">--env</span> <span class="s2">"MUJOCO_GL=</span><span class="nv">$MUJOCO_GL</span><span class="s2">"</span> <span class="se">\</span>
+  <span class="nt">--env</span> <span class="s2">"PYOPENGL_PLATFORM=</span><span class="nv">$PYOPENGL_PLATFORM</span><span class="s2">"</span> <span class="se">\</span>
+  <span class="nt">--env</span> <span class="s2">"EGL_PLATFORM=</span><span class="nv">$EGL_PLATFORM</span><span class="s2">"</span> <span class="se">\</span>
+  <span class="nt">--env</span> <span class="s2">"HIP_VISIBLE_DEVICES=</span><span class="nv">$HIP_VISIBLE_DEVICES</span><span class="s2">"</span> <span class="se">\</span>
+  <span class="nt">--env</span> <span class="s2">"NUMBA_CACHE_DIR=</span><span class="nv">$NUMBA_CACHE_DIR</span><span class="s2">"</span> <span class="se">\</span>
+  <span class="nt">--env</span> <span class="s2">"TRANSFORMERS_CACHE=</span><span class="nv">$HF_CACHE_DIR</span><span class="s2">"</span> <span class="se">\</span>
+  <span class="nt">--env</span> <span class="s2">"HF_HOME=</span><span class="nv">$HF_CACHE_DIR</span><span class="s2">"</span> <span class="se">\</span>
+  <span class="nt">--env</span> <span class="s2">"TRITON_CACHE_DIR=</span><span class="nv">$TRITON_CACHE_DIR</span><span class="s2">"</span> <span class="se">\</span>
+  <span class="nt">--env</span> <span class="s2">"LD_LIBRARY_PATH=</span><span class="nv">$LD_LIBRARY_PATH</span><span class="s2">"</span> <span class="se">\</span>
+  <span class="nt">--bind</span> <span class="s2">"</span><span class="nv">$REPO_ROOT</span><span class="s2">:</span><span class="nv">$REPO_ROOT</span><span class="s2">"</span> <span class="se">\</span>
+  <span class="nt">--bind</span> <span class="s2">"/work1/chunyilee/yuhang:/work1/chunyilee/yuhang"</span> <span class="se">\</span>
+  <span class="s2">"</span><span class="nv">$APPTAINER_IMAGE</span><span class="s2">"</span> <span class="se">\</span>
+  bash <span class="nt">-c</span> <span class="s2">"</span><span class="nv">$INNER_CMD</span><span class="s2">"</span>
+</code></pre></div></div>
+
+<hr>
+
+<h2 id="step-5-submission--monitoring">Step 5: Submission &amp; Monitoring</h2>
+
+<p>Create the logs directory and submit the job:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir</span> <span class="nt">-p</span> slurm/logs
+sbatch slurm.sh
+</code></pre></div></div>
+
+<p>Monitor the execution logs:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">tail</span> <span class="nt">-f</span> slurm/logs/eval_openvla_libero_&lt;JOB_ID&gt;.out
+</code></pre></div></div>
+
+    </div>
+  </article><div id="disqus_thread" style="max-width: 800px; margin: 0 auto;">
+    <script type="text/javascript">
+        var disqus_shortname  = 'al-folio';
+        var disqus_identifier = '/blog/2025/amd_openvla';
+        var disqus_title      = "Running OpenVLA Evaluation (LIBERO) on AMD Servers";
+        (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        })();
+    </script>
+    <noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript" rel="external nofollow noopener" target="_blank">comments powered by Disqus.</a>
+</noscript>
+</div>
+</div>
+
+          </div>
+        </div>
+        
+      
+    </div>
+
+    <!-- Footer -->    
+    <footer class="fixed-bottom">
+      <div class="container mt-0">
+        © Copyright 2026 Yuhang  Song. Powered by <a href="https://github.com/alshedivat/al-folio" rel="external nofollow noopener" target="_blank">al-folio</a> theme.
+Last updated: April 05, 2026.
+      </div>
+    </footer>
+
+    <!-- JavaScripts -->
+    <!-- jQuery -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <!-- Bootsrap & MDB scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha256-fgLAgv7fyCGopR/gBNq2iW3ZKIdqIcyshnUULC4vex8=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/js/mdb.min.js" integrity="sha256-NdbiivsvWt7VYCt6hYNT3h/th9vSTL4EDWeGs5SN3DA=" crossorigin="anonymous"></script>
+
+    <!-- Masonry & imagesLoaded -->
+  <script defer src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha256-Nn1q/fx0H7SNLZMQ5Hw5JLaTRZp0yILA/FRexe19VdI=" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+  <script defer src="/assets/js/masonry.js" type="text/javascript"></script>
+    
+  <!-- Medium Zoom JS -->
+  <script defer src="https://cdn.jsdelivr.net/npm/medium-zoom@1.0.8/dist/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+  <script defer src="/assets/js/zoom.js"></script>
+  <!-- Sidebar Table of Contents -->
+  <script defer src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script>
+
+
+  <!-- Bootstrap Table -->
+  <script defer src="https://unpkg.com/bootstrap-table@1.21.4/dist/bootstrap-table.min.js"></script>
+
+  <!-- Load Common JS -->
+  <script src="/assets/js/no_defer.js"></script>
+  <script defer src="/assets/js/common.js"></script>
+  <script defer src="/assets/js/copy_code.js" type="text/javascript"></script>
+
+    
+  <script async src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script>
+  <script async src="https://badge.dimensions.ai/badge.js"></script>
+
+    <!-- MathJax -->
+  <script type="text/javascript">
+    window.MathJax = {
+      tex: {
+        tags: 'ams'
+      }
+    };
+  </script>
+  <script defer type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script>
+  <script defer src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+
+    
+    
+
+<!-- Scrolling Progress Bar -->
+<script type="text/javascript">
+  /*
+   * This JavaScript code has been adapted from the article 
+   * https://css-tricks.com/reading-position-indicator/ authored by Pankaj Parashar, 
+   * published on the website https://css-tricks.com on the 7th of May, 2014.
+   * Couple of changes were made to the original code to make it compatible 
+   * with the `al-foio` theme.
+   */
+  const progressBar = $("#progress");
+  /*
+   * We set up the bar after all elements are done loading.
+   * In some cases, if the images in the page are larger than the intended
+   * size they'll have on the page, they'll be resized via CSS to accomodate
+   * the desired size. This mistake, however, breaks the computations as the
+   * scroll size is computed as soon as the elements finish loading.
+   * To account for this, a minimal delay was introduced before computing the
+   * values.
+   */
+  window.onload = function () {
+    setTimeout(progressBarSetup, 50);
+  };
+  /*
+   * We set up the bar according to the browser.
+   * If the browser supports the progress element we use that.
+   * Otherwise, we resize the bar thru CSS styling
+   */
+  function progressBarSetup() {
+    if ("max" in document.createElement("progress")) {
+      initializeProgressElement();
+      $(document).on("scroll", function() {
+        progressBar.attr({ value: getCurrentScrollPosition() });
+      });
+      $(window).on("resize", initializeProgressElement);
+    } else {
+      resizeProgressBar();
+      $(document).on("scroll", resizeProgressBar);
+      $(window).on("resize", resizeProgressBar);
+    }
+  }
+  /*
+   * The vertical scroll position is the same as the number of pixels that
+   * are hidden from view above the scrollable area. Thus, a value > 0 is
+   * how much the user has scrolled from the top
+   */
+  function getCurrentScrollPosition() {
+    return $(window).scrollTop();
+  }
+
+  function initializeProgressElement() {
+    let navbarHeight = $("#navbar").outerHeight(true);
+    $("body").css({ "padding-top": navbarHeight });
+    $("progress-container").css({ "padding-top": navbarHeight });
+    progressBar.css({ top: navbarHeight });
+    progressBar.attr({
+      max: getDistanceToScroll(),
+      value: getCurrentScrollPosition(),
+    });
+  }
+  /*
+   * The offset between the html document height and the browser viewport
+   * height will be greater than zero if vertical scroll is possible.
+   * This is the distance the user can scroll
+   */
+  function getDistanceToScroll() {
+    return $(document).height() - $(window).height();
+  }
+
+  function resizeProgressBar() {
+    progressBar.css({ width: getWidthPercentage() + "%" });
+  }
+  // The scroll ratio equals the percentage to resize the bar
+  function getWidthPercentage() {
+    return (getCurrentScrollPosition() / getDistanceToScroll()) * 100;
+  }
+</script>
+
+  </body>
+</html>

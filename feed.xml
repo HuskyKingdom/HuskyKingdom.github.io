@@ -1,5 +1,233 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://yhscode.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://yhscode.com/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-04-05T12:39:00+00:00</updated><id>https://yhscode.com/feed.xml</id><title type="html">blank</title><subtitle>Yuhang Song Personal BLOG, Ph.D. student in University of LIverpool and National Tsing Hua University, Founder of TOPSOFT INT.  宋宇航个人博客， 英国利物浦大学 &amp; 国立清华大学博士生在读， TOPSOFT INT 创始人。
-</subtitle><entry><title type="html">Installation Updates of Sim-to-Real-Virtual-Guidance-for-Robot-Navigation</title><link href="https://yhscode.com/blog/2023/frame_install/" rel="alternate" type="text/html" title="Installation Updates of Sim-to-Real-Virtual-Guidance-for-Robot-Navigation" /><published>2023-07-02T04:00:00+00:00</published><updated>2023-07-02T04:00:00+00:00</updated><id>https://yhscode.com/blog/2023/frame_install</id><content type="html" xml:base="https://yhscode.com/blog/2023/frame_install/"><![CDATA[<p>This article provides clear instructions on how to install necessary environments for all modules in <a href="https://github.com/KaiChen1008/Sim-to-Real-Virtual-Guidance-for-Robot-Navigation">Sim-To-Real Navigation Robots</a> project, apart from the official <a href="https://kaichen1008.github.io/Sim-to-Real-Virtual-Guidance-for-Robot-Navigation/">original documentation</a> provided. Since it was made in 2020, some additional corrections are needed during installation.</p>
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en"><generator uri="https://jekyllrb.com/" version="4.4.1">Jekyll</generator><link href="https://yhscode.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://yhscode.com/" rel="alternate" type="text/html" hreflang="en" /><updated>2026-04-05T12:44:02+00:00</updated><id>https://yhscode.com/feed.xml</id><title type="html">blank</title><subtitle>Yuhang Song Personal BLOG, Ph.D. student in University of LIverpool and National Tsing Hua University, Founder of TOPSOFT INT.  宋宇航个人博客， 英国利物浦大学 &amp; 国立清华大学博士生在读， TOPSOFT INT 创始人。
+</subtitle><entry><title type="html">Running OpenVLA Evaluation (LIBERO) on AMD Servers</title><link href="https://yhscode.com/blog/2025/amd_openvla/" rel="alternate" type="text/html" title="Running OpenVLA Evaluation (LIBERO) on AMD Servers" /><published>2025-10-16T15:59:00+00:00</published><updated>2025-10-16T15:59:00+00:00</updated><id>https://yhscode.com/blog/2025/amd_openvla</id><content type="html" xml:base="https://yhscode.com/blog/2025/amd_openvla/"><![CDATA[<h1 id="-running-openvla-evaluation-libero-on-amd-servers">🚀 Running OpenVLA Evaluation (LIBERO) on AMD Servers</h1>
+
+<p>This guide provides a standardized operating procedure (SOP) for running OpenVLA robotic manipulation evaluations (LIBERO Benchmark) on AMD GPU high-performance computing (HPC) clusters using Apptainer/Singularity and SLURM.</p>
+
+<hr />
+
+<h2 id="step-1-workspace-preparation">Step 1: Workspace Preparation</h2>
+
+<p>Clone the necessary repositories into your workspace root (e.g., <code class="language-plaintext highlighter-rouge">/work1/username/workspace</code>).</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># 1. Clone OpenVLA (or your custom fork, e.g., openvla-oft-yhs)</span>
+git clone <span class="o">[</span>https://github.com/moojink/openvla-oft.git]<span class="o">(</span>https://github.com/moojink/openvla-oft.git<span class="o">)</span>
+
+<span class="c"># 2. Clone LIBERO Benchmark</span>
+git clone <span class="o">[</span>https://github.com/Lifelong-Robot-Learning/LIBERO.git]<span class="o">(</span>https://github.com/Lifelong-Robot-Learning/LIBERO.git<span class="o">)</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="step-2-build-the-bulletproof-apptainer-image">Step 2: Build the Bulletproof Apptainer Image</h2>
+
+<p>We consolidate all fragmented dependencies into a single Apptainer definition file to create a plug-and-play environment.</p>
+
+<h3 id="1-create-openvla_rocmdef">1. Create <code class="language-plaintext highlighter-rouge">openvla_rocm.def</code></h3>
+<p>Create this file in your root directory and paste the following content:</p>
+
+<pre><code class="language-apptainer">Bootstrap: docker
+From: rocm/primus:v26.1
+
+%environment
+    export PATH="/opt/ompi/bin:/opt/ucx/bin:/opt/rocm/bin:$PATH"
+    export LD_LIBRARY_PATH="/usr/local/lib:/opt/rocm/lib:/opt/ompi/lib:/opt/ucx/lib:/usr/lib64:/usr/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu/libibverbs:$LD_LIBRARY_PATH"
+    
+    # CRITICAL: Headless rendering settings for LIBERO
+    export MUJOCO_GL=osmesa
+    export PYOPENGL_PLATFORM=osmesa
+    export ROBOT_PLATFORM=LIBERO
+    
+    export NUMBA_DISABLE_JIT=1
+    export TOKENIZERS_PARALLELISM=false
+
+%post
+    # 1. System dependencies &amp; OSMesa rendering libraries
+    apt-get update
+    apt-get install -y  \
+            librdmacm1 libibverbs-dev libibverbs1 ibverbs-providers ibverbs-utils rdma-core \
+            git cmake gcc g++ make automake autoconf libtool \
+            pkg-config numactl libnuma-dev librdmacm-dev \
+            flex bison wget curl libdrm-dev libibumad-dev \
+            pciutils ethtool libpci-dev \
+            libegl1-mesa-dev libgles2-mesa-dev \
+            libosmesa6 libosmesa6-dev libegl1-mesa libgl1-mesa-glx libgles2-mesa
+
+    # Fix potential ROCm RDMA driver conflicts
+    mv /usr/lib/x86_64-linux-gnu/libibverbs/libbnxt_re-rdmav34.so /usr/lib/x86_64-linux-gnu/libibverbs/libbnxt_re-rdmav34.so.inbox 2&gt;/dev/null || true
+    ldconfig
+
+    # 2. Basic tools (replace GUI-based OpenCV with headless)
+    pip3 uninstall -y opencv-python || true
+    pip3 install opencv-python-headless==4.11.0.86 packaging ninja torchvision torchaudio
+
+    # 3. Core LLM/VLM dependencies
+    pip3 install transformers==4.40.1 tokenizers==0.19.1 timm==0.9.16
+    pip3 install draccus==0.8.0 "sentencepiece&gt;=0.1.99" json-numpy tensorflow-cpu==2.15.1
+
+    # 4. Install LIBERO Environment
+    cd /
+    git clone [https://github.com/Lifelong-Robot-Learning/LIBERO.git](https://github.com/Lifelong-Robot-Learning/LIBERO.git)
+    touch LIBERO/libero/__init__.py
+    pip3 install -e LIBERO
+    pip3 install "imageio[ffmpeg]" robosuite==1.4.1 bddl easydict cloudpickle gym
+
+    # Pre-create LIBERO config to avoid runtime CLI prompts
+    mkdir -p /root/.libero
+    python3 -c "
+import os, yaml
+root = '/LIBERO/libero/libero'
+config = {
+    'benchmark_root': root,
+    'bddl_files': os.path.join(root, 'bddl_files'),
+    'init_states': os.path.join(root, 'init_files'),
+    'datasets': os.path.join(root, '../datasets'),
+    'assets': os.path.join(root, 'assets'),
+}
+with open('/root/.libero/config.yaml', 'w') as f:
+    yaml.dump(config, f)
+"
+
+    # 5. Install OpenVLA
+    cd /
+    git clone [https://github.com/moojink/openvla-oft.git](https://github.com/moojink/openvla-oft.git)
+    cd openvla-oft
+    pip3 install -e . --no-deps
+    pip3 install -r experiments/robot/libero/libero_requirements.txt 
+
+    # 6. Ultimate Dependency Fix: Overwrite conflicting packages
+    echo "=== Force installing robust versions ==="
+    pip3 install -U transformers==4.44.0 peft==0.17.0 diffusers==0.30.2
+    pip3 install tensorflow-datasets tensorflow-graphics jsonlines
+    
+    # Strictly lock Numpy and ml_dtypes to prevent C-API crashes; Install authentic dlimp from GitHub
+    pip3 install --no-deps --force-reinstall ml_dtypes==0.3.1 numpy==1.24.4 git+[https://github.com/kvablack/dlimp.git](https://github.com/kvablack/dlimp.git)
+
+%help
+    OpenVLA-OFT environment fixed for AMD ROCm &amp; LIBERO.
+</code></pre>
+
+<h3 id="2-build-the-image">2. Build the Image</h3>
+<p><strong>CRITICAL:</strong> HPC login nodes usually have very restricted <code class="language-plaintext highlighter-rouge">/tmp</code> storage. You must redirect Apptainer’s cache and temporary directories to your high-capacity storage (e.g., <code class="language-plaintext highlighter-rouge">/work1/</code>) before building, otherwise the build will crash with a <code class="language-plaintext highlighter-rouge">stream error</code>.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># Redirect temp directories to high-capacity storage</span>
+<span class="nb">export </span><span class="nv">APPTAINER_TMPDIR</span><span class="o">=</span>/path/to/your/large/storage/apptainer_tmp
+<span class="nb">export </span><span class="nv">APPTAINER_CACHEDIR</span><span class="o">=</span>/path/to/your/large/storage/apptainer_cache
+<span class="nb">mkdir</span> <span class="nt">-p</span> <span class="nv">$APPTAINER_TMPDIR</span> <span class="nv">$APPTAINER_CACHEDIR</span>
+
+<span class="c"># Clean old cache and build</span>
+apptainer cache clean <span class="nt">--force</span>
+apptainer build openvla_rocm.sif openvla_rocm.def
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="step-3-source-code-patches">Step 3: Source Code Patches</h2>
+
+<p>Before running the evaluation, you must apply two minor patches to the Python script located at <code class="language-plaintext highlighter-rouge">openvla-oft/experiments/robot/libero/run_libero_eval.py</code>.</p>
+
+<h3 id="patch-1-bypass-pytorch-26-weights_only-restriction">Patch 1: Bypass PyTorch 2.6 <code class="language-plaintext highlighter-rouge">weights_only</code> Restriction</h3>
+<p>PyTorch 2.6 enforces <code class="language-plaintext highlighter-rouge">weights_only=True</code> by default, which blocks the loading of LIBERO’s initial state files (<code class="language-plaintext highlighter-rouge">.init</code>). 
+Open <code class="language-plaintext highlighter-rouge">run_libero_eval.py</code> and inject the following patch immediately after <code class="language-plaintext highlighter-rouge">import torch</code> at the top of the file:</p>
+
+<div class="language-python highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kn">import</span> <span class="n">torch</span>
+
+<span class="c1"># ================= PATCH START =================
+# Bypass PyTorch 2.6 weights_only restriction to load LIBERO states
+</span><span class="n">_original_load</span> <span class="o">=</span> <span class="n">torch</span><span class="p">.</span><span class="n">load</span>
+<span class="k">def</span> <span class="nf">_patched_load</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">kwargs</span><span class="p">.</span><span class="nf">setdefault</span><span class="p">(</span><span class="sh">'</span><span class="s">weights_only</span><span class="sh">'</span><span class="p">,</span> <span class="bp">False</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nf">_original_load</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+<span class="n">torch</span><span class="p">.</span><span class="n">load</span> <span class="o">=</span> <span class="n">_patched_load</span>
+<span class="c1"># ================= PATCH END =================
+</span></code></pre></div></div>
+
+<h3 id="patch-2-remove-redundant-arguments-for-custom-forks-only">Patch 2: Remove Redundant Arguments (For custom forks only)</h3>
+<p>If you are using a custom/modified branch (like <code class="language-plaintext highlighter-rouge">openvla-oft-yhs</code>) and encounter a <code class="language-plaintext highlighter-rouge">TypeError: get_action() got an unexpected keyword argument 'h_head'</code>, locate the <code class="language-plaintext highlighter-rouge">get_action()</code> call inside the episode loop (around line 360) and remove or comment out the <code class="language-plaintext highlighter-rouge">h_head=...</code> argument.</p>
+
+<hr />
+
+<h2 id="step-4-slurm-submission-script-slurmsh">Step 4: SLURM Submission Script (<code class="language-plaintext highlighter-rouge">slurm.sh</code>)</h2>
+
+<p>Create your SLURM submission script (<code class="language-plaintext highlighter-rouge">slurm.sh</code>). Pay special attention to the <code class="language-plaintext highlighter-rouge">--bind</code> mounts to ensure the container can access your datasets located outside the repository folder.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+<span class="c">#SBATCH --job-name=eval-openvla-libero</span>
+<span class="c">#SBATCH --partition=mi3508x       # Replace with your specific partition</span>
+<span class="c">#SBATCH --nodes=1</span>
+<span class="c">#SBATCH --ntasks-per-node=1</span>
+<span class="c">#SBATCH --gres=gpu:1              # Evaluation only requires 1 GPU</span>
+<span class="c">#SBATCH --cpus-per-task=60 </span>
+<span class="c">#SBATCH --time=5:00:00</span>
+<span class="c">#SBATCH --output=slurm/logs/eval_openvla_libero_%j.out</span>
+<span class="c">#SBATCH --error=slurm/logs/eval_openvla_libero_%j.err</span>
+
+<span class="nb">set</span> <span class="nt">-ex</span>
+
+<span class="c"># 1. Paths (Adjust REPO_ROOT to your workspace path)</span>
+<span class="nv">REPO_ROOT</span><span class="o">=</span><span class="s2">"</span><span class="k">${</span><span class="nv">SLURM_SUBMIT_DIR</span><span class="k">}</span><span class="s2">"</span>
+<span class="nv">APPTAINER_IMAGE</span><span class="o">=</span><span class="s2">"</span><span class="nv">$REPO_ROOT</span><span class="s2">/openvla_rocm.sif"</span>
+
+<span class="c"># 2. Evaluation Config</span>
+<span class="nv">PRETRAINED_CHECKPOINT</span><span class="o">=</span><span class="s2">"moojink/openvla-7b-oft-finetuned-libero-spatial"</span>
+<span class="nv">EVAL_SCRIPT</span><span class="o">=</span><span class="s2">"openvla-oft/experiments/robot/libero/run_libero_eval.py"</span>
+<span class="nv">DATASET_NAME</span><span class="o">=</span><span class="s2">"libero_spatial"</span>
+
+<span class="c"># 3. Runtime Environment (Headless Rendering &amp; GPU Isolation)</span>
+<span class="nb">export </span><span class="nv">ROBOT_PLATFORM</span><span class="o">=</span><span class="s2">"LIBERO"</span>
+<span class="nb">export </span><span class="nv">MUJOCO_GL</span><span class="o">=</span><span class="s2">"osmesa"</span>
+<span class="nb">export </span><span class="nv">PYOPENGL_PLATFORM</span><span class="o">=</span><span class="s2">"osmesa"</span>
+<span class="nb">export </span><span class="nv">EGL_PLATFORM</span><span class="o">=</span><span class="s2">"surfaceless"</span>
+<span class="nb">export </span><span class="nv">HIP_VISIBLE_DEVICES</span><span class="o">=</span><span class="s2">"0"</span>
+
+<span class="c"># Redirect HuggingFace &amp; Triton caches into the workspace</span>
+<span class="nb">export </span><span class="nv">NUMBA_CACHE_DIR</span><span class="o">=</span><span class="s2">"</span><span class="nv">$REPO_ROOT</span><span class="s2">/.cache/numba"</span>
+<span class="nb">export </span><span class="nv">HF_CACHE_DIR</span><span class="o">=</span><span class="s2">"</span><span class="nv">$REPO_ROOT</span><span class="s2">/.cache/huggingface"</span>
+<span class="nb">export </span><span class="nv">TRITON_CACHE_DIR</span><span class="o">=</span><span class="s2">"</span><span class="nv">$REPO_ROOT</span><span class="s2">/.cache/triton"</span>
+<span class="nb">mkdir</span> <span class="nt">-p</span> <span class="s2">"</span><span class="nv">$NUMBA_CACHE_DIR</span><span class="s2">"</span> <span class="s2">"</span><span class="nv">$HF_CACHE_DIR</span><span class="s2">"</span> <span class="s2">"</span><span class="nv">$TRITON_CACHE_DIR</span><span class="s2">"</span>
+
+<span class="nb">export </span><span class="nv">LD_LIBRARY_PATH</span><span class="o">=</span><span class="s2">"/usr/local/lib:/opt/rocm/lib:/opt/ompi/lib:/opt/ucx/lib:/usr/lib64:/usr/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu/libibverbs"</span>
+
+<span class="c"># 4. Command to run inside the container</span>
+<span class="nv">INNER_CMD</span><span class="o">=</span><span class="s2">"set -ex; </span><span class="se">\</span><span class="s2">
+cd </span><span class="se">\"</span><span class="nv">$REPO_ROOT</span><span class="se">\"</span><span class="s2">; </span><span class="se">\</span><span class="s2">
+python -u </span><span class="se">\"</span><span class="nv">$EVAL_SCRIPT</span><span class="se">\"</span><span class="s2"> </span><span class="se">\</span><span class="s2">
+  --pretrained_checkpoint </span><span class="se">\"</span><span class="nv">$PRETRAINED_CHECKPOINT</span><span class="se">\"</span><span class="s2"> </span><span class="se">\</span><span class="s2">
+  --task_suite_name </span><span class="se">\"</span><span class="nv">$DATASET_NAME</span><span class="se">\"</span><span class="s2">"</span>
+
+<span class="c"># 5. Run Apptainer Container</span>
+<span class="c"># CRITICAL: Ensure you --bind the parent directory where your LIBERO benchmarks/datasets are located (e.g., /work1/username/)</span>
+apptainer run <span class="se">\</span>
+  <span class="nt">--cleanenv</span> <span class="se">\</span>
+  <span class="nt">--writable-tmpfs</span> <span class="se">\</span>
+  <span class="nt">--env</span> <span class="s2">"ROBOT_PLATFORM=</span><span class="nv">$ROBOT_PLATFORM</span><span class="s2">"</span> <span class="se">\</span>
+  <span class="nt">--env</span> <span class="s2">"MUJOCO_GL=</span><span class="nv">$MUJOCO_GL</span><span class="s2">"</span> <span class="se">\</span>
+  <span class="nt">--env</span> <span class="s2">"PYOPENGL_PLATFORM=</span><span class="nv">$PYOPENGL_PLATFORM</span><span class="s2">"</span> <span class="se">\</span>
+  <span class="nt">--env</span> <span class="s2">"EGL_PLATFORM=</span><span class="nv">$EGL_PLATFORM</span><span class="s2">"</span> <span class="se">\</span>
+  <span class="nt">--env</span> <span class="s2">"HIP_VISIBLE_DEVICES=</span><span class="nv">$HIP_VISIBLE_DEVICES</span><span class="s2">"</span> <span class="se">\</span>
+  <span class="nt">--env</span> <span class="s2">"NUMBA_CACHE_DIR=</span><span class="nv">$NUMBA_CACHE_DIR</span><span class="s2">"</span> <span class="se">\</span>
+  <span class="nt">--env</span> <span class="s2">"TRANSFORMERS_CACHE=</span><span class="nv">$HF_CACHE_DIR</span><span class="s2">"</span> <span class="se">\</span>
+  <span class="nt">--env</span> <span class="s2">"HF_HOME=</span><span class="nv">$HF_CACHE_DIR</span><span class="s2">"</span> <span class="se">\</span>
+  <span class="nt">--env</span> <span class="s2">"TRITON_CACHE_DIR=</span><span class="nv">$TRITON_CACHE_DIR</span><span class="s2">"</span> <span class="se">\</span>
+  <span class="nt">--env</span> <span class="s2">"LD_LIBRARY_PATH=</span><span class="nv">$LD_LIBRARY_PATH</span><span class="s2">"</span> <span class="se">\</span>
+  <span class="nt">--bind</span> <span class="s2">"</span><span class="nv">$REPO_ROOT</span><span class="s2">:</span><span class="nv">$REPO_ROOT</span><span class="s2">"</span> <span class="se">\</span>
+  <span class="nt">--bind</span> <span class="s2">"/work1/chunyilee/yuhang:/work1/chunyilee/yuhang"</span> <span class="se">\</span>
+  <span class="s2">"</span><span class="nv">$APPTAINER_IMAGE</span><span class="s2">"</span> <span class="se">\</span>
+  bash <span class="nt">-c</span> <span class="s2">"</span><span class="nv">$INNER_CMD</span><span class="s2">"</span>
+</code></pre></div></div>
+
+<hr />
+
+<h2 id="step-5-submission--monitoring">Step 5: Submission &amp; Monitoring</h2>
+
+<p>Create the logs directory and submit the job:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir</span> <span class="nt">-p</span> slurm/logs
+sbatch slurm.sh
+</code></pre></div></div>
+
+<p>Monitor the execution logs:</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">tail</span> <span class="nt">-f</span> slurm/logs/eval_openvla_libero_&lt;JOB_ID&gt;.out
+</code></pre></div></div>]]></content><author><name></name></author><category term="tutorial" /><category term="amd," /><category term="openvla," /><category term="embodiedai" /><summary type="html"><![CDATA[This guide provides a standardized operating procedure (SOP) for running OpenVLA robotic manipulation evaluations (LIBERO Benchmark) on AMD GPU high-performance computing (HPC) clusters using Apptainer/Singularity and SLURM.]]></summary></entry><entry><title type="html">Installation Updates of Sim-to-Real-Virtual-Guidance-for-Robot-Navigation</title><link href="https://yhscode.com/blog/2023/frame_install/" rel="alternate" type="text/html" title="Installation Updates of Sim-to-Real-Virtual-Guidance-for-Robot-Navigation" /><published>2023-07-02T04:00:00+00:00</published><updated>2023-07-02T04:00:00+00:00</updated><id>https://yhscode.com/blog/2023/frame_install</id><content type="html" xml:base="https://yhscode.com/blog/2023/frame_install/"><![CDATA[<p>This article provides clear instructions on how to install necessary environments for all modules in <a href="https://github.com/KaiChen1008/Sim-to-Real-Virtual-Guidance-for-Robot-Navigation">Sim-To-Real Navigation Robots</a> project, apart from the official <a href="https://kaichen1008.github.io/Sim-to-Real-Virtual-Guidance-for-Robot-Navigation/">original documentation</a> provided. Since it was made in 2020, some additional corrections are needed during installation.</p>
 
 <p>Moreover, there are some missing files in the original repo, they were also provided in this page. Note that we will only go though the updates to the original documentation, please refer to the original documentation for full instructions.</p>
 
