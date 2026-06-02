@@ -5,7 +5,11 @@
 body {
   padding-bottom: 70px;
   color: var(--global-text-color);
-  background-color: var(--global-bg-color);
+  background:
+    radial-gradient(circle at 12% 10%, rgba(28,124,125,.14), transparent 28rem),
+    radial-gradient(circle at 88% 18%, rgba(200,166,79,.18), transparent 22rem),
+    linear-gradient(135deg, var(--global-surface-color-soft) 0%, var(--global-surface-color) 46%, var(--global-bg-color) 100%);
+  background-color: var(--global-surface-color);
 
   h1, h2, h3, h4, h5, h6 {
     scroll-margin-top: 66px;
@@ -20,6 +24,19 @@ body.fixed-top-nav {
 body.sticky-bottom-footer {
   // Remove padding below footer.
   padding-bottom: 0;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(28,124,125,.055) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(176,107,56,.045) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: linear-gradient(to bottom, rgba(0,0,0,.68), transparent 78%);
 }
 
 .container {

@@ -112,11 +112,26 @@
         {% if entry.type == "article" -%}
           {%- capture entrytype -%}<em>{{entry.journal}}</em>{%- endcapture -%}
         {%- elsif proceedings contains entry.type -%}
-          {%- capture entrytype -%}<em>In {{entry.booktitle}}</em> {%- endcapture -%}
+          {%- if entry.booktitle -%}
+            {%- capture entrytype -%}<em>In {{entry.booktitle}}</em> {%- endcapture -%}
+          {%- elsif entry.journal -%}
+            {%- capture entrytype -%}<em>In {{entry.journal}}</em> {%- endcapture -%}
+          {%- endif -%}
         {%- elsif thesis contains entry.type -%}
           {%- capture entrytype -%}<em>{{entry.school}}</em> {%- endcapture -%}
         {%- else -%}
           {%- capture entrytype -%}{%- endcapture -%}
+        {%- endif -%}
+        {%- if entry.abbr -%}
+          {%- capture venue_short -%}{{ entry.abbr }}{%- endcapture -%}
+        {%- elsif entry.booktitle -%}
+          {%- capture venue_short -%}{{ entry.booktitle }}{%- endcapture -%}
+        {%- elsif entry.journal -%}
+          {%- capture venue_short -%}{{ entry.journal }}{%- endcapture -%}
+        {%- elsif entry.school -%}
+          {%- capture venue_short -%}{{ entry.school }}{%- endcapture -%}
+        {%- else -%}
+          {%- capture venue_short -%}{%- endcapture -%}
         {%- endif -%}
         {%- if entry.month -%}
           {%- capture entrymonth -%}{{ " " }}{{ entry.month | capitalize }}{%- endcapture -%}
@@ -128,6 +143,9 @@
         {%- capture periodical -%}{{ entrytype }}{%- if entrytype_text != "" and entryyear != "" -%}, {%- endif -%}{{ entrymonth }}{{ entryyear }}{%- endcapture -%}
         <div class="periodical">
           {{ periodical | strip }}
+        </div>
+        <div class="venue-year">
+          {{ venue_short | strip }}{{ entryyear }}
         </div>
         <div class="periodical">
           {{ entry.note | strip }}

@@ -4,3 +4,27 @@
 
 "PhysRev":
   url: https://journals.aps.org/
+
+"ACML":
+  url: https://www.acml-conf.org/
+  color: "#1c7c7d"
+
+"TMLR":
+  url: https://jmlr.org/tmlr/
+  color: "#b06b38"
+
+"arXiv":
+  url: https://arxiv.org/
+  color: "#66746f"
+
+"ICPR":
+  url: https://iapr.org/
+  color: "#1c7c7d"
+
+"NeurIPS":
+  url: https://neurips.cc/
+  color: "#2f5f8f"
+
+"CoRL":
+  url: https://www.corl.org/
+  color: "#8a6b2f"

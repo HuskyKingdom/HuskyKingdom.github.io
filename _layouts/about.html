@@ -3,12 +3,15 @@ layout: default
 ---
 
 <!-- about.html -->
-      <div class="post">
-        <header class="post-header">
-          <h1 class="post-title">
-           {% if site.title == "blank" -%}<span class="font-weight-bold">{{ site.first_name }}</span> {{ site.middle_name }} {{ site.last_name }}{%- else -%}{{ site.title }}{%- endif %}
-          </h1>
-          <p class="desc">{{ page.subtitle }}</p>
+      <div class="post about-page">
+        <header class="post-header about-hero">
+          <div class="hero-copy">
+            <p class="hero-kicker">Embodied AI · Autonomous Systems · Human-Centered Technology</p>
+            <h1 class="post-title">
+             {% if site.title == "blank" -%}<span class="font-weight-bold">{{ site.first_name }}</span> {{ site.middle_name }} {{ site.last_name }}{%- else -%}{{ site.title }}{%- endif %}
+            </h1>
+            <p class="desc">{{ page.subtitle }}</p>
+          </div>
         </header>
 
         <article>
@@ -36,26 +39,32 @@ layout: default
           </div>
           {%- endif %}
 
-          <div class="clearfix">
+          <div class="clearfix about-intro">
             {{ content }}
           </div>
 
           <!-- News -->
           {% if page.news and site.announcements.enabled -%}
+            <section class="home-section">
             <h2><a href="{{ '/news/' | relative_url }}" style="color: inherit;">News</a></h2>
             {%- include news.html limit=true %}
+            </section>
           {%- endif %}
 
           <!-- Latest posts -->
           {% if page.latest_posts -%}
+            <section class="home-section">
             <h2><a href="{{ '/blog/' | relative_url }}" style="color: inherit;">Latest Posts</a></h2>
             {%- include latest_posts.html %}
+            </section>
           {%- endif %}
 
-          <!-- Selected papers -->
+          <!-- Publications -->
           {% if page.selected_papers -%}
-            <h2><a href="{{ '/publications/' | relative_url }}" style="color: inherit;">Selected Publications</a></h2>
-            {%- include selected_papers.html %}
+            <section class="home-section">
+            <h2><a href="{{ '/publications/' | relative_url }}" style="color: inherit;">Publications</a></h2>
+            {%- include all_papers.html %}
+            </section>
           {%- endif %}
 
           <!-- Social -->
