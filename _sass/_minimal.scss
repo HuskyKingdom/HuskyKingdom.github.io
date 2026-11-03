@@ -577,6 +577,10 @@ pre, code, figure.highlight {
   border-radius: 8px;
 }
 
+code {
+  color: var(--global-theme-color);
+}
+
 /* Blog index -----------------------------------------------------------------*/
 
 .blog-index {
