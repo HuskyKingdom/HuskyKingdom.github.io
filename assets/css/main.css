@@ -1608,22 +1608,30 @@ html[data-theme=dark] .fa-sun {
 .publications h2.bibliography {
   display: none;
 }
+.publications ol.bibliography {
+  margin: 0;
+  padding: 0;
+}
 .publications ol.bibliography li {
-  margin-bottom: 1.75rem;
+  margin: 0;
+  padding: 1rem 0;
+  border-top: 1px solid var(--global-divider-color);
 }
 .publications ol.bibliography li .row {
   margin: 0;
 }
-.publications ol.bibliography li .col-sm-2.preview, .publications ol.bibliography li .col-sm-2.abbr {
-  padding-left: 0;
+.publications ol.bibliography li .col-sm-2.preview, .publications ol.bibliography li .col-sm-2.abbr, .publications ol.bibliography li .col-sm-8 {
+  padding: 0;
 }
 @media (min-width: 576px) {
   .publications ol.bibliography li .row {
     flex-wrap: nowrap;
+    align-items: flex-start;
   }
   .publications ol.bibliography li .col-sm-2.preview, .publications ol.bibliography li .col-sm-2.abbr {
-    flex: 0 0 156px;
-    max-width: 156px;
+    flex: 0 0 132px;
+    max-width: 132px;
+    margin-right: 1.1rem;
   }
   .publications ol.bibliography li .col-sm-8 {
     flex: 1 1 0;
@@ -1631,10 +1639,28 @@ html[data-theme=dark] .fa-sun {
     max-width: none;
   }
 }
+@media (max-width: 575px) {
+  .publications ol.bibliography li .col-sm-2.preview, .publications ol.bibliography li .col-sm-2.abbr {
+    margin-bottom: 0.6rem;
+  }
+}
+.publications ol.bibliography li figure {
+  margin: 0;
+}
 .publications ol.bibliography li img.preview {
-  max-width: 140px;
+  display: block;
+  width: 132px;
+  max-width: 132px;
+  height: 92px;
+  padding: 3px;
+  object-fit: contain;
+  background-color: var(--global-bg-color);
   border-radius: 8px;
   border: 1px solid var(--global-divider-color);
+}
+.publications ol.bibliography li .abbr {
+  height: auto;
+  margin: 0;
 }
 .publications ol.bibliography li .abbr abbr {
   background-color: var(--global-muted-bg-color) !important;
@@ -1645,17 +1671,42 @@ html[data-theme=dark] .fa-sun {
 .publications ol.bibliography li .abbr abbr a {
   color: var(--global-text-color);
 }
+.publications ol.bibliography li {
+  /* Text column: title, authors and venue stack; the venue chip and the
+     link buttons share one row underneath. */
+}
+.publications ol.bibliography li .col-sm-8 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 0.35rem;
+}
+.publications ol.bibliography li .col-sm-8 > * {
+  flex: 0 0 100%;
+}
+.publications ol.bibliography li .col-sm-8 {
+  /* The note field renders as whitespace when empty, so :empty misses it;
+     ordering keeps it from splitting the chip row. */
+}
+.publications ol.bibliography li .col-sm-8 > .venue-year, .publications ol.bibliography li .col-sm-8 > .links {
+  flex: 0 0 auto;
+  margin-top: 0.45rem;
+  order: 1;
+}
+.publications ol.bibliography li .col-sm-8 > .badges, .publications ol.bibliography li .col-sm-8 > .hidden {
+  order: 2;
+}
 .publications ol.bibliography li .title {
   font-family: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
   font-weight: 500;
   font-size: 1rem;
-  line-height: 1.4;
+  line-height: 1.35;
   color: var(--global-text-color);
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.2rem;
 }
 .publications ol.bibliography li .author {
   font-size: 0.8rem;
-  line-height: 1.55;
+  line-height: 1.5;
   color: var(--global-text-color-light);
 }
 .publications ol.bibliography li .author a {
@@ -1669,6 +1720,7 @@ html[data-theme=dark] .fa-sun {
 }
 .publications ol.bibliography li .periodical {
   font-size: 0.8rem;
+  line-height: 1.5;
   font-style: italic;
   color: var(--global-text-color-light);
 }
@@ -1682,31 +1734,51 @@ html[data-theme=dark] .fa-sun {
 }
 .publications ol.bibliography li .venue-year {
   display: inline-flex;
-  margin: 0.4rem 0;
-  padding: 0.1rem 0.5rem;
-  font-size: 0.75rem;
-  font-weight: 500;
-  color: var(--global-text-color);
+  align-items: center;
+  height: 1.5rem;
+  padding: 0 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--global-theme-color);
   background-color: var(--global-muted-bg-color);
   border-radius: 8px;
 }
 .publications ol.bibliography li .links {
-  margin-top: 0.35rem;
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
 }
 .publications ol.bibliography li .links a.btn {
+  display: inline-flex;
+  align-items: center;
+  height: 1.5rem;
+  margin: 0;
+  padding: 0 0.6rem;
   font-family: "DM Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 500;
   text-transform: none;
+  line-height: 1;
   color: var(--global-text-color-light);
   border: 1px solid var(--global-divider-color);
   border-radius: 8px;
-  padding: 0.12rem 0.6rem;
-  margin: 0 0.3rem 0.3rem 0;
 }
 .publications ol.bibliography li .links a.btn:hover {
   color: var(--global-theme-color);
   border-color: var(--global-theme-color);
+}
+.publications ol.bibliography li {
+  /* Citation badges stay hidden until their scripts fill them */
+}
+.publications ol.bibliography li .badges {
+  padding: 0;
+}
+.publications ol.bibliography li .badges span:empty {
+  display: none;
+}
+.publications ol.bibliography li .hidden.open {
+  margin-top: 0.6rem;
 }
 .publications ol.bibliography li div.abstract.hidden {
   border: 0;
@@ -1717,15 +1789,26 @@ html[data-theme=dark] .fa-sun {
   background-color: var(--global-bg-color);
 }
 
-/* Year rule on the dedicated publications page */
+/* Home card: dividers between papers, none above the first or below the last */
+.home-card .publications ol.bibliography:first-of-type li:first-child {
+  border-top: 0;
+  padding-top: 0;
+}
+.home-card .publications ol.bibliography:last-of-type li:last-child {
+  padding-bottom: 0;
+}
+
+/* Publications page: a year rule on the left instead of dividers */
+.page-shell .publications h2.year {
+  margin: 2rem 0 0.5rem 0;
+}
 .page-shell .publications ol.bibliography {
   border-left: 1px solid var(--global-divider-color);
   padding-left: 1.25rem;
 }
-
-/* Home card keeps the list compact */
-.home-card .publications ol.bibliography li:last-child {
-  margin-bottom: 0;
+.page-shell .publications ol.bibliography li {
+  border-top: 0;
+  padding: 0.75rem 0;
 }
 
 /* Page and post headers ------------------------------------------------------*/
