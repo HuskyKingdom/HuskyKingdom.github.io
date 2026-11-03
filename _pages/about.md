@@ -26,7 +26,7 @@ My research life moves between [airvLab](https://smartlab.csc.liv.ac.uk/) at the
 I am interested in agents that can perceive, decide, and act with efficiency in the physical world. The long-term aim is to build robust end-to-end navigation systems that feel less like isolated models and more like reliable companions for real environments.
 
 <div class="research-pills">
-  <span>World Model</span>
+  <span>World Action Model</span>
   <span>Physical Intelligence</span>
   <span>Deep Learning</span>
   <span>Deep Reinforcement Learning</span>
