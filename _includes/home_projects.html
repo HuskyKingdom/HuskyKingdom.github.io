@@ -1,0 +1,28 @@
+
+          <div class="writing-list paginated-list" data-page-size="3">
+            {%- assign research_projects = site.projects | where: "category", "Research" | sort: "importance" -%}
+            {%- assign industrial_projects = site.projects | where: "category", "Industrial" | sort: "importance" -%}
+            {%- assign home_projects = research_projects | concat: industrial_projects -%}
+            {% for project in home_projects %}
+              {%- if project.redirect -%}
+                {%- assign project_url = project.redirect -%}
+              {%- else -%}
+                {%- assign project_url = project.url | relative_url -%}
+              {%- endif -%}
+              <article class="writing-item project-item paginated-item">
+                {%- if project.img %}
+                <a class="project-thumb" href="{{ project_url }}"><img src="{{ project.img | relative_url }}" alt="{{ project.title }}" loading="lazy"></a>
+                {%- endif %}
+                <div class="project-body">
+                  {%- if project.category %}
+                  <div class="writing-date"><span class="post-category">{{ project.category }}</span></div>
+                  {%- endif %}
+                  <h3 class="writing-title"><a href="{{ project_url }}">{{ project.title }}</a></h3>
+                  {%- if project.description %}
+                  <p class="writing-desc">{{ project.description | strip_html | truncatewords: 32 }}</p>
+                  {%- endif %}
+                </div>
+              </article>
+            {%- endfor %}
+            <nav class="list-pagination" aria-label="Projects pagination"></nav>
+          </div>

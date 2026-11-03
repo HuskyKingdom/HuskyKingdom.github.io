@@ -404,6 +404,31 @@ html[data-theme='dark'] .fa-sun {
   a:hover { color: var(--global-theme-color); text-decoration: none; }
 }
 
+.project-item {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  &[hidden] { display: none; }
+
+  .project-thumb {
+    flex: 0 0 112px;
+    img {
+      width: 112px;
+      height: 76px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid var(--global-divider-color);
+      background-color: var(--global-bg-color);
+    }
+  }
+
+  .project-body { flex: 1 1 0; min-width: 0; }
+}
+
+@media (max-width: 575px) {
+  .project-item .project-thumb { display: none; }
+}
+
 .archive-strip {
   display: flex;
   flex-wrap: wrap;

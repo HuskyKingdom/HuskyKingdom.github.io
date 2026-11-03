@@ -4,7 +4,7 @@ title: Husky Road-Marking Robot
 description: LiDAR-guided wall following with PID control for autonomous highway line drawing, developed in NVIDIA Isaac Sim and deployed on a real Husky UGV with ROS1.
 img: assets/img/husky_road/robot_setup.jpg
 importance: 2
-category: Research
+category: Industrial
 toc:
   sidebar: left
 ---

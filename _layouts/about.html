@@ -54,12 +54,12 @@ layout: default
           </section>
           {%- endif %}
 
-          <!-- Latest posts -->
-          {% if page.latest_posts -%}
+          <!-- Projects -->
+          {% if site.projects.size > 0 -%}
           <section class="home-card home-card-wide">
-            <h2 class="card-label">Writing</h2>
-            {%- include latest_posts.html %}
-            <a class="card-link" href="{{ '/blog/' | relative_url }}">All writing <i class="fas fa-arrow-right fa-xs"></i></a>
+            <h2 class="card-label">Projects</h2>
+            {%- include home_projects.html %}
+            <a class="card-link" href="{{ '/projects/' | relative_url }}">All projects <i class="fas fa-arrow-right fa-xs"></i></a>
           </section>
           {%- endif %}
 
