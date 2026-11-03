@@ -1521,6 +1521,35 @@ html[data-theme=dark] .fa-sun {
   text-decoration: none;
 }
 
+.project-item {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+.project-item[hidden] {
+  display: none;
+}
+.project-item .project-thumb {
+  flex: 0 0 112px;
+}
+.project-item .project-thumb img {
+  width: 112px;
+  height: 76px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--global-divider-color);
+  background-color: var(--global-bg-color);
+}
+.project-item .project-body {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+@media (max-width: 575px) {
+  .project-item .project-thumb {
+    display: none;
+  }
+}
 .archive-strip {
   display: flex;
   flex-wrap: wrap;
