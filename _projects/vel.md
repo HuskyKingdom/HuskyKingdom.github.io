@@ -129,6 +129,15 @@ The gain could come from any test-time refinement, from the extra parameters, or
 
 The setup is a Rokae xMate arm with an Inspire RH56 dexterous hand and two RGB cameras. The robot picks up a 3D-printed screw and inserts it into a base, a step that tolerates little positional error. π0.5 is fine-tuned on 300 teleoperated demonstrations, and the energy head is trained on the same demonstrations with the backbone frozen. Grasping is almost unchanged (82% vs 83%), while insertion rises from 44% to 60% and the full task from 35% to 50%. The episodes VEL recovers are those that grasped correctly and would have failed on the precise placement.
 
+<div class="row justify-content-center">
+    <div class="col-sm-6 mt-3 mt-md-0">
+        {% include video.html path="assets/video/vel/real_robot_insertion.mp4" class="img-fluid rounded z-depth-1" controls=true muted=true %}
+    </div>
+</div>
+<div class="caption">
+    Real-robot screw insertion: the dexterous hand picks up the white screw from the black base and inserts it into the blue base, with the scene reset between trials.
+</div>
+
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
         {% include figure.html path="assets/img/vel/real_robot_energy.jpg" title="Energy during real-robot execution" class="img-fluid rounded z-depth-1" %}
