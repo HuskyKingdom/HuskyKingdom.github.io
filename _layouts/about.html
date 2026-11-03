@@ -4,82 +4,85 @@ layout: default
 
 <!-- about.html -->
       <div class="post about-page">
-        <header class="post-header about-hero">
-          <div class="hero-copy">
-            <p class="hero-kicker">Embodied AI · Autonomous Systems · Human-Centered Technology</p>
-            <h1 class="post-title">
-             {% if site.title == "blank" -%}<span class="font-weight-bold">{{ site.first_name }}</span> {{ site.middle_name }} {{ site.last_name }}{%- else -%}{{ site.title }}{%- endif %}
-            </h1>
-            <p class="desc">{{ page.subtitle }}</p>
-          </div>
+        <header class="post-header sr-only">
+          <h1 class="post-title">{{ site.first_name }} {{ site.middle_name }} {{ site.last_name }}</h1>
         </header>
 
-        <article>
+        <div class="home-grid">
+
+          <!-- About -->
+          <section class="home-card home-card-wide">
+            <h2 class="card-label">About</h2>
+            {%- if page.subtitle %}
+            <p class="about-subtitle">{{ page.subtitle }}</p>
+            {%- endif %}
+            <div class="about-intro">
+              {{ content }}
+            </div>
+            <a class="card-link" href="{{ '/cv/' | relative_url }}">Full CV <i class="fas fa-arrow-right fa-xs"></i></a>
+          </section>
+
+          <!-- Profile -->
           {% if page.profile -%}
-          <div class="profile float-{%- if page.profile.align == 'left' -%}left{%- else -%}right{%- endif -%}">
+          <aside class="home-card home-card-narrow profile-card">
+            <h2 class="card-label">Profile <span class="status-dot"></span></h2>
             {%- if page.profile.image %}
               {%- assign profile_image_path = page.profile.image | prepend: 'assets/img/' -%}
-
               {% if page.profile.image_circular %}
-                {%- assign profile_image_class = "img-fluid z-depth-1 rounded-circle" -%}
+                {%- assign profile_image_class = "img-fluid rounded-circle" -%}
               {% else %}
-                {%- assign profile_image_class = "img-fluid z-depth-1 rounded" -%}
+                {%- assign profile_image_class = "img-fluid" -%}
               {% endif %}
-
               {% include figure.html
               path=profile_image_path
               class=profile_image_class
               alt=page.profile.image -%}
             {% endif -%}
             {%- if page.profile.address %}
+            <h3 class="card-sublabel">Office</h3>
             <div class="address">
               {{ page.profile.address }}
             </div>
             {%- endif %}
-          </div>
+          </aside>
           {%- endif %}
-
-          <div class="clearfix about-intro">
-            {{ content }}
-          </div>
 
           <!-- News -->
           {% if page.news and site.announcements.enabled -%}
-            <section class="home-section">
-            <h2><a href="{{ '/news/' | relative_url }}" style="color: inherit;">News</a></h2>
+          <section class="home-card home-card-narrow">
+            <h2 class="card-label">News</h2>
             {%- include news.html limit=true %}
-            </section>
+          </section>
           {%- endif %}
 
           <!-- Latest posts -->
           {% if page.latest_posts -%}
-            <section class="home-section">
-            <h2><a href="{{ '/blog/' | relative_url }}" style="color: inherit;">Latest Posts</a></h2>
+          <section class="home-card home-card-wide">
+            <h2 class="card-label">Writing</h2>
             {%- include latest_posts.html %}
-            </section>
+            <a class="card-link" href="{{ '/blog/' | relative_url }}">All writing <i class="fas fa-arrow-right fa-xs"></i></a>
+          </section>
           {%- endif %}
 
           <!-- Publications -->
           {% if page.selected_papers -%}
-            <section class="home-section">
-            <h2><a href="{{ '/publications/' | relative_url }}" style="color: inherit;">Publications</a></h2>
+          <section class="home-card home-card-full">
+            <h2 class="card-label">Publications</h2>
             {%- include all_papers.html %}
-            </section>
+            <a class="card-link" href="{{ '/publications/' | relative_url }}">All publications <i class="fas fa-arrow-right fa-xs"></i></a>
+          </section>
           {%- endif %}
 
-          <!-- Social -->
-          {%- if page.social %}
-            <div class="social">
-              <div class="contact-icons">
-                {% include social.html %}
-              </div>
-
-              <div class="contact-note">
-                {{ site.contact_note }}
-              </div>
-
+          <!-- Archive -->
+          <section class="home-card home-card-full archive-strip">
+            <p>Explore the full archive of work and writing.</p>
+            <div class="archive-links">
+              <a href="{{ '/publications/' | relative_url }}"><i class="far fa-file-lines"></i> Publications</a>
+              <a href="{{ '/blog/' | relative_url }}"><i class="fas fa-book-open"></i> Blog</a>
+              <a href="{{ '/projects/' | relative_url }}"><i class="far fa-folder"></i> Projects</a>
+              <a href="{{ '/cv/' | relative_url }}">CV</a>
             </div>
-          {%- endif %}
-        </article>
+          </section>
 
-</div>
+        </div>
+      </div>
