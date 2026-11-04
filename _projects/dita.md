@@ -1,7 +1,7 @@
 ---
 layout: page
 title: DITA Agent
-description: An novel approach to object navigation in AI2-THOR. Code and resources, visualization are available <a href="https://anonymous.4open.science/r/DITA_acml2023-4FC8"> here</a>.
+description: Depth-Inference Termination Agent for object navigation in AI2-THOR. A judge model trained alongside reinforcement learning decides when the agent has reached its target.
 img: assets/img/dita_archi.png
 importance: 1
 category: Research
@@ -10,18 +10,18 @@ toc:
   sidebar: left
 ---
 
+**[Learning to Terminate in Object Navigation](https://proceedings.mlr.press/v222/song24a.html).** Asian Conference on Machine Learning (ACML), 2024. [Code](https://github.com/HuskyKingdom/DITA_acml2023)
 
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
-        {% include figure.html path="assets/img/vis.png" title="example image" class="img-fluid rounded z-depth-1" %}
+        {% include figure.html path="assets/img/vis.png" title="DITA overview" class="img-fluid rounded z-depth-1" %}
     </div>
 </div>
 <div class="caption">
-    Depth-Inference Termination Agent (DITA) Model Overview. Upon sense observation from time step $t$, the DRL model embeds the observation into StateEmb_{t}, this embedding is then sent to judge model to classify whether to sample termination action, based on both output from DRL and the judge model, our DITA model outputs the final action a_{t}.
+    DITA overview. At each step the DRL model embeds the observation into a state embedding, the judge model uses it to decide whether to terminate, and DITA combines both outputs into the final action.
 </div>
 
-
-## Abstract
+## Overview
 
 
 This project addresses the critical challenge of object navigation in autonomous navigation systems, particularly focusing on the problem of target approach and episode termination in environments with long optimal episode length in Deep Reinforcement Learning (DRL) based methods. While effective in environment exploration and object localization, conventional DRL methods often struggle with optimal path planning and termination recognition due to a lack of depth information. 
@@ -127,9 +127,7 @@ We use AI2-THOR as our environment simulator to evaluate our method for object n
     Testing Accuracy of All Compared Models.
 </div>
 
-Models were compared based on two metrics. Success Rate (SR)measures the probability of agent success in the environment, computed by $$SR=\frac{1}{N} \sum_{n=0}^N S_n$$, $$N$$ is the number of total episodes in evaluation, and $S_n$ is a binary indicator 
- with $S_n=1$ represents agent succeed in episode $n$. In addition, we use \textit{Success Weighted
-by Path Length (SPL)}, which measures the navigation efficiency of the agent, defined as $$SPL=\frac{1}{N} \sum_{n=0}^N S_n  \frac{O_n}{max(L_n,O_n)}$$ Where $O_n$ is the length of the optimal path to the target that agent could take in episode $$n$$, $$L_n$$ is the actual path length agent has taken. 
+Models were compared based on two metrics. Success Rate (SR) measures the probability of agent success in the environment, computed by $$SR=\frac{1}{N} \sum_{n=0}^N S_n$$, where $$N$$ is the number of total episodes in evaluation, and $$S_n$$ is a binary indicator with $$S_n=1$$ when the agent succeeds in episode $$n$$. In addition, we use *Success Weighted by Path Length (SPL)*, which measures the navigation efficiency of the agent, defined as $$SPL=\frac{1}{N} \sum_{n=0}^N S_n  \frac{O_n}{max(L_n,O_n)}$$, where $$O_n$$ is the length of the optimal path to the target that agent could take in episode $$n$$, and $$L_n$$ is the actual path length the agent has taken.
 
 <table>
   <thead>
