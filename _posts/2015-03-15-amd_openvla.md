@@ -4,7 +4,7 @@ title: Running OpenVLA Evaluation (LIBERO) on AMD Servers
 date: 2025-10-16 11:59:00-0400
 description: This guide provides a standardized operating procedure (SOP) for running OpenVLA robotic manipulation evaluations (LIBERO Benchmark) on AMD GPU high-performance computing (HPC) clusters using Apptainer/Singularity and SLURM.
 categories: tutorial
-tags: amd, openvla, embodiedai
+tags: [amd, openvla, embodiedai]
 disqus_comments: true
 related_posts: false
 toc:

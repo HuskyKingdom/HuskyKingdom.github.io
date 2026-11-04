@@ -662,6 +662,16 @@ pre, code, figure.highlight {
   border-radius: 8px;
 }
 
+/* Figures narrower than their column sit centred, in line with their captions */
+.post figure:not(.highlight) {
+  text-align: center;
+  img, video {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
 code {
   color: var(--global-theme-color);
 }
