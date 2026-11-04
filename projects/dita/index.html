@@ -12,10 +12,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>DITA Agent | Yuhang  Song</title>
     <meta name="author" content="Yuhang  Song">
-    <meta name="description" content="An novel approach to object navigation in AI2-THOR. Code and resources, visualization are available &lt;a href=" https:>
-</head>
-<body>
-<p> here." /&gt;
+    <meta name="description" content="Depth-Inference Termination Agent for object navigation in AI2-THOR. A judge model trained alongside reinforcement learning decides when the agent has reached its target.">
     <meta name="keywords" content="Yuhang Song, university of liverpool, national tsing hua university, 宋宇航, 英国利物浦大学, 国立清华大学, topsoft, topsoftint, topsoft 极致网络">
 
 
@@ -56,10 +53,10 @@
     <script src="/assets/js/dark_mode.js"></script>
     
 
-  
+  </head>
 
   <!-- Body -->
-  </p>
+  <body class="fixed-top-nav sticky-bottom-footer">
 
     <!-- Header -->
     <header>
@@ -125,11 +122,13 @@
 
           <header class="post-header">
             <h1 class="post-title">DITA Agent</h1>
-            <p class="post-description">An novel approach to object navigation in AI2-THOR. Code and resources, visualization are available <a href="https://anonymous.4open.science/r/DITA_acml2023-4FC8" rel="external nofollow noopener" target="_blank"> here</a>.</p>
+            <p class="post-description">Depth-Inference Termination Agent for object navigation in AI2-THOR. A judge model trained alongside reinforcement learning decides when the agent has reached its target.</p>
           </header>
 
           <article>
-            <div class="row">
+            <p><strong><a href="https://proceedings.mlr.press/v222/song24a.html" rel="external nofollow noopener" target="_blank">Learning to Terminate in Object Navigation</a>.</strong> Asian Conference on Machine Learning (ACML), 2024. <a href="https://github.com/HuskyKingdom/DITA_acml2023" rel="external nofollow noopener" target="_blank">Code</a></p>
+
+<div class="row">
     <div class="col-sm mt-3 mt-md-0">
         <figure>
 
@@ -137,7 +136,7 @@
     
 
     <!-- Fallback to the original file -->
-    <img src="/assets/img/vis.png" class="img-fluid rounded z-depth-1" width="auto" height="auto" title="example image" onerror="this.onerror=null; $('.responsive-img-srcset').remove();">
+    <img src="/assets/img/vis.png" class="img-fluid rounded z-depth-1" width="auto" height="auto" title="DITA overview" onerror="this.onerror=null; $('.responsive-img-srcset').remove();">
 
   </picture>
 
@@ -146,10 +145,10 @@
     </div>
 </div>
 <div class="caption">
-    Depth-Inference Termination Agent (DITA) Model Overview. Upon sense observation from time step $t$, the DRL model embeds the observation into StateEmb_{t}, this embedding is then sent to judge model to classify whether to sample termination action, based on both output from DRL and the judge model, our DITA model outputs the final action a_{t}.
+    DITA overview. At each step the DRL model embeds the observation into a state embedding, the judge model uses it to decide whether to terminate, and DITA combines both outputs into the final action.
 </div>
 
-<h2 id="abstract">Abstract</h2>
+<h2 id="overview">Overview</h2>
 
 <p>This project addresses the critical challenge of object navigation in autonomous navigation systems, particularly focusing on the problem of target approach and episode termination in environments with long optimal episode length in Deep Reinforcement Learning (DRL) based methods. While effective in environment exploration and object localization, conventional DRL methods often struggle with optimal path planning and termination recognition due to a lack of depth information.</p>
 
@@ -285,9 +284,7 @@
     Testing Accuracy of All Compared Models.
 </div>
 
-<p>Models were compared based on two metrics. Success Rate (SR)measures the probability of agent success in the environment, computed by \(SR=\frac{1}{N} \sum_{n=0}^N S_n\), \(N\) is the number of total episodes in evaluation, and $S_n$ is a binary indicator 
- with $S_n=1$ represents agent succeed in episode $n$. In addition, we use \textit{Success Weighted
-by Path Length (SPL)}, which measures the navigation efficiency of the agent, defined as \(SPL=\frac{1}{N} \sum_{n=0}^N S_n  \frac{O_n}{max(L_n,O_n)}\) Where $O_n$ is the length of the optimal path to the target that agent could take in episode \(n\), \(L_n\) is the actual path length agent has taken.</p>
+<p>Models were compared based on two metrics. Success Rate (SR) measures the probability of agent success in the environment, computed by \(SR=\frac{1}{N} \sum_{n=0}^N S_n\), where \(N\) is the number of total episodes in evaluation, and \(S_n\) is a binary indicator with \(S_n=1\) when the agent succeeds in episode \(n\). In addition, we use <em>Success Weighted by Path Length (SPL)</em>, which measures the navigation efficiency of the agent, defined as \(SPL=\frac{1}{N} \sum_{n=0}^N S_n  \frac{O_n}{max(L_n,O_n)}\), where \(O_n\) is the length of the optimal path to the target that agent could take in episode \(n\), and \(L_n\) is the actual path length the agent has taken.</p>
 
 <table>
   <thead>
@@ -444,6 +441,5 @@ by Path Length (SPL)}, which measures the navigation efficiency of the agent, de
 	    
 
 	    <script src="/assets/js/list_pagination.js"></script>
-	  
-	</body>
-</html>
+	  </body>
+	</html>
