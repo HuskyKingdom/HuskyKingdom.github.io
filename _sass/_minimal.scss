@@ -338,6 +338,22 @@ html[data-theme='dark'] .fa-sun {
   .home-card-narrow { grid-column: span 4; }
 }
 
+.about-name {
+  font-family: $font-head;
+  font-size: 1.6rem;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--global-text-color);
+  margin: 0 0 0.35rem 0;
+  span {
+    font-family: $font-body;
+    font-weight: 400;
+    color: var(--global-text-color-light);
+    margin-left: 0.25rem;
+  }
+}
+
 .about-subtitle {
   font-size: 0.9rem;
   color: var(--global-text-color-light);

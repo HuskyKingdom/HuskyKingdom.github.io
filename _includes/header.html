@@ -6,7 +6,7 @@
         <div class="container">
           <a class="navbar-brand title" href="{{ site.baseurl }}/">
             {%- if site.title == "blank" -%}
-              {{- site.first_name }} {{ site.middle_name }} {{ site.last_name -}}
+              {{- site.first_name }}{% if site.middle_name %} {{ site.middle_name }}{% endif %} {{ site.last_name -}}
             {%- else -%}
               {{- site.title -}}
             {%- endif -%}

@@ -3,16 +3,15 @@ layout: default
 ---
 
 <!-- about.html -->
+      {%- capture full_name -%}{{ site.first_name }}{% if site.middle_name %} {{ site.middle_name }}{% endif %} {{ site.last_name }}{%- endcapture -%}
       <div class="post about-page">
-        <header class="post-header sr-only">
-          <h1 class="post-title">{{ site.first_name }} {{ site.middle_name }} {{ site.last_name }}</h1>
-        </header>
 
         <div class="home-grid">
 
           <!-- About -->
           <section class="home-card home-card-wide">
             <h2 class="card-label">About</h2>
+            <h1 class="about-name">{{ full_name }}{% if site.seo.native_name %} <span lang="zh">{{ site.seo.native_name }}</span>{% endif %}</h1>
             {%- if page.subtitle %}
             <p class="about-subtitle">{{ page.subtitle }}</p>
             {%- endif %}
@@ -32,10 +31,11 @@ layout: default
               {% else %}
                 {%- assign profile_image_class = "img-fluid" -%}
               {% endif %}
+              {%- capture profile_alt -%}{{ full_name }}{% if site.seo.native_name %} ({{ site.seo.native_name }}){% endif %}, Ph.D. student at the University of Liverpool{%- endcapture -%}
               {% include figure.html
               path=profile_image_path
               class=profile_image_class
-              alt=page.profile.image -%}
+              alt=profile_alt -%}
             {% endif -%}
             {%- if page.profile.address %}
             <h3 class="card-sublabel">Office</h3>

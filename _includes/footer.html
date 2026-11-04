@@ -1,7 +1,7 @@
     <footer class="site-footer">
       <div class="container">
         <div class="footer-copy">
-          &copy; {{ site.time | date: '%Y' }} {{ site.first_name }} {{ site.middle_name }} {{ site.last_name }}
+          &copy; {{ site.time | date: '%Y' }} {{ site.first_name }}{% if site.middle_name %} {{ site.middle_name }}{% endif %} {{ site.last_name }}
           {%- if site.impressum_path %}
           · <a href="{{ site.url }}{{ site.baseurl }}{{ site.impressum_path }}">Impressum</a>
           {%- endif %}

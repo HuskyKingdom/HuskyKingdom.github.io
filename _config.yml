@@ -8,11 +8,30 @@ middle_name:
 last_name: Song
 email: me@yhscode.com
 description: > # the ">" symbol means to ignore newlines until "footer_text:"
-  Yuhang Song Personal BLOG, Ph.D. student in University of LIverpool and National Tsing Hua University, Founder of TOPSOFT INT. 
-  宋宇航个人博客， 英国利物浦大学 & 国立清华大学博士生在读， TOPSOFT INT 创始人。
+  Yuhang Song (宋宇航) is a Ph.D. student at the University of Liverpool and National Tsing Hua University
+  working on embodied AI, and the founder of TOPSOFT INT (topsoftint.com).
+  宋宇航，英国利物浦大学与国立清华大学博士生，TOPSOFT INT 创始人。
 footer_text: >
   Powered by <a href="https://github.com/alshedivat/al-folio">al-folio</a> theme.
-keywords: Yuhang Song, university of liverpool, national tsing hua university, 宋宇航, 英国利物浦大学, 国立清华大学, topsoft, topsoftint, topsoft 极致网络  # add your own keywords or leave empty
+keywords: Yuhang Song, 宋宇航, Yuhang Song Liverpool, University of Liverpool, National Tsing Hua University, TOPSOFT, TOPSOFT INT, topsoftint, 英国利物浦大学, 国立清华大学, topsoft 极致网络, embodied AI  # add your own keywords or leave empty
+
+# Search engine optimisation: the home page title and the Person / Organization
+# structured data are built from these values (see _includes/metadata.html).
+seo:
+  home_title: Yuhang Song (宋宇航) · University of Liverpool & NTHU · TOPSOFT
+  native_name: 宋宇航
+  job_title: Ph.D. Student
+  affiliations:
+    - name: University of Liverpool
+      url: https://www.liverpool.ac.uk/
+    - name: National Tsing Hua University
+      url: https://www.nthu.edu.tw/
+  organization:
+    name: TOPSOFT INT
+    alternate_names: [TOPSOFT, TOPSOFT Group, topsoftint, TOPSOFT 极致网络]
+    url: https://www.topsoftint.com/
+    founding_year: "2016"
+  knows_about: [Embodied AI, World Action Model, Physical Intelligence, Robotics, Deep Reinforcement Learning, Vision-and-Language Navigation]
 
 lang: en # the language of your site (for example: en, fr, cn, ru, etc.)
 icon: H  # the emoji used as the favicon (alternatively, provide image name in /assets/img/)
@@ -62,9 +81,9 @@ max_width: 800px
 # Open Graph & Schema.org
 # -----------------------------------------------------------------------------
 # Display links to the page with a preview object on social media.
-serve_og_meta: false # Include Open Graph meta tags in the HTML head
-serve_schema_org: false # Include Schema.org in the HTML head
-og_image: # The site-wide (default for all links) Open Graph preview image
+serve_og_meta: true # Include Open Graph meta tags in the HTML head
+serve_schema_org: true # Include Schema.org in the HTML head
+og_image: https://yhscode.com/assets/img/og_card.jpg # The site-wide (default for all links) Open Graph preview image
 
 # -----------------------------------------------------------------------------
 # Social integration
@@ -169,7 +188,7 @@ collections:
   news:
     defaults:
       layout: post
-    output: true
+    output: false  # every item is shown inline, so no thin per-item pages
     permalink: /news/:path/
   projects:
     output: true
@@ -209,6 +228,13 @@ exclude:
   - Gemfile
   - Gemfile.lock
   - vendor
+  - saved  # al-folio demo posts, kept for reference only
+  - README.md
+  - CONTRIBUTING.md
+  - Untitled-1.yml
+  - Dockerfile
+  - docker-compose.yml
+  - docker-local.yml
 keep_files:
   - CNAME
   - .nojekyll
