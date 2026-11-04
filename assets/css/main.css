@@ -1420,6 +1420,22 @@ html[data-theme=dark] .fa-sun {
     grid-column: span 4;
   }
 }
+.about-name {
+  font-family: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  font-size: 1.6rem;
+  font-weight: 600;
+  line-height: 1.25;
+  letter-spacing: -0.01em;
+  color: var(--global-text-color);
+  margin: 0 0 0.35rem 0;
+}
+.about-name span {
+  font-family: "DM Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+  font-weight: 400;
+  color: var(--global-text-color-light);
+  margin-left: 0.25rem;
+}
+
 .about-subtitle {
   font-size: 0.9rem;
   color: var(--global-text-color-light);
