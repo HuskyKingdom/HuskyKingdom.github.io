@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <!-- Head -->
+  <head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">    <!-- Metadata, OpenGraph and Schema.org -->
+    
+
+    <!-- Standard metadata -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>RoboJev | Yuhang  Song</title>
+    <meta name="author" content="Yuhang  Song">
+    <meta name="description" content="Testing the new generation of decision models (Jev, Laya, PlayJev and the OpenAI Decisions API) as the brain of a robot arm for the atomic action of grasping.">
+    <meta name="keywords" content="Yuhang Song, university of liverpool, national tsing hua university, 宋宇航, 英国利物浦大学, 国立清华大学, topsoft, topsoftint, topsoft 极致网络">
+
+
+    <!-- Bootstrap & MDB -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-DF7Zhf293AJxJNTmh5zhoYYIMs2oXitRfBjY+9L//AY=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/css/mdb.min.css" integrity="sha256-jpjYvU3G3N6nrrBwXJoVEYI/0zw8htfFnhT9ljN3JJw=" crossorigin="anonymous">
+
+    <!-- Bootstrap Table -->
+    <link defer rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.4/dist/bootstrap-table.min.css">
+
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/academicons@1.9.1/css/academicons.min.css" integrity="sha256-i1+4qU2G2860dGGIOJscdC30s9beBXjFfzjWLjBRsBg=" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,400&amp;family=Space+Grotesk:wght@400;500;600;700&amp;display=swap">
+
+    <!-- Code Syntax Highlighting -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jwarby/jekyll-pygments-themes@master/github.css" media="" id="highlight_theme_light">
+
+    
+    <!-- Sidebar Table of Contents -->
+    <link href="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.css" rel="stylesheet">
+    
+
+    <!-- Styles -->
+    
+    <link rel="shortcut icon" href="data:image/svg+xml,&lt;svg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22&gt;&lt;text%20y=%22.9em%22%20font-size=%2290%22&gt;H&lt;/text&gt;&lt;/svg&gt;">
+    
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="canonical" href="https://yhscode.com/projects/robojev/">
+
+    <!-- Dark Mode -->
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jwarby/jekyll-pygments-themes@master/native.css" media="none" id="highlight_theme_dark">
+
+    <script src="/assets/js/theme.js"></script>
+    <script src="/assets/js/dark_mode.js"></script>
+    
+
+  </head>
+
+  <!-- Body -->
+  <body class="fixed-top-nav sticky-bottom-footer">
+
+    <!-- Header -->
+    <header>
+
+      <!-- Nav Bar -->
+      <nav id="navbar" class="navbar navbar-light navbar-expand-sm fixed-top">
+        <div class="container">
+          <a class="navbar-brand title" href="/">Yuhang  Song</a>
+          <!-- Navbar Toggle -->
+          <button class="navbar-toggler collapsed ml-auto" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar top-bar"></span>
+            <span class="icon-bar middle-bar"></span>
+            <span class="icon-bar bottom-bar"></span>
+          </button>
+
+          <div class="collapse navbar-collapse text-right" id="navbarNav">
+            <ul class="navbar-nav ml-auto flex-nowrap">
+
+              <!-- About -->
+              <li class="nav-item ">
+                <a class="nav-link" href="/">About</a>
+              </li>
+              
+              <!-- Blog -->
+              <li class="nav-item ">
+                <a class="nav-link" href="/blog/">Blog</a>
+              </li>
+
+              <!-- Other pages -->
+              <li class="nav-item ">
+                <a class="nav-link" href="/projects/">Projects</a>
+              </li>
+
+              <!-- Toogle theme mode -->
+              <li class="toggle-container">
+                <button id="light-toggle" title="Change theme">
+                  <i class="fas fa-moon"></i>
+                  <i class="fas fa-sun"></i>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+    </header>
+
+
+    <!-- Content -->
+    <div class="container mt-5">
+      
+        
+        <div class="row">
+          <!-- sidebar, which will move to the top on a small screen -->
+          <div class="col-sm-3">
+            <nav id="toc-sidebar" class="sticky-top"></nav>
+          </div>
+          <!-- main content area -->
+          <div class="col-sm-9">
+            <!-- page.html -->
+        <div class="post page-shell page-robojev">
+
+          <header class="post-header">
+            <h1 class="post-title">RoboJev</h1>
+            <p class="post-description">Testing the new generation of decision models (Jev, Laya, PlayJev and the OpenAI Decisions API) as the brain of a robot arm for the atomic action of grasping.</p>
+          </header>
+
+          <article>
+            <div class="row justify-content-center">
+    <div class="col-sm-5 mt-3 mt-md-0">
+        
+
+<figure>
+
+  
+
+  <video src="/assets/video/robojev/robotjev_demo.mp4" class="img-fluid rounded z-depth-1" width="auto" height="auto" controls="" muted=""></video>
+
+  
+
+</figure>
+
+    </div>
+</div>
+<div class="caption">
+    RobotJev on a Rokae AR5 arm: open-vocabulary grasping from a language instruction or a click, with grasp force adapted to the object.
+</div>
+
+<h2 id="overview">Overview</h2>
+
+<p>Since September 2026 a new kind of model has appeared: the <strong>decision model</strong>. It does not generate text. The caller gives it the current state and a question with fixed options, and one forward pass returns a probability for every option. Questions come in three forms: multiple choice, yes/no predicates and scores.</p>
+
+<p>This makes decision models a natural fit for closed-loop robot control, where a decision is needed at every step. A generative model call took 4–5 s in our tests, while a decision model answers in one pass, in tens of milliseconds when run locally. Its output is already a distribution over actions: the options are moves such as up, down, left, right and close the gripper, the model picks one, and code executes it with step sizes and safety checks kept in rules.</p>
+
+<p>RoboJev tests whether these models can drive a 7-DoF Rokae AR5 arm through the atomic action of <strong>grasping</strong>, in two projects:</p>
+
+<ul>
+  <li>
+<strong><a href="https://github.com/Vector-xxr/RobotJev" rel="external nofollow noopener" target="_blank">RobotJev</a></strong> (September 23–30, 2026) uses the open models Laya and PlayJev with a two-finger gripper.</li>
+  <li>
+<strong><a href="https://github.com/Vector-xxr/RobotDecision" rel="external nofollow noopener" target="_blank">RobotDecision</a></strong> (October 12–15, 2026) uses the OpenAI Decisions API with an Inspire dexterous hand.</li>
+</ul>
+
+<h2 id="robotjev">RobotJev</h2>
+
+<h3 id="from-jev-to-laya-to-playjev">From Jev to Laya to PlayJev</h3>
+
+<p><strong>Jev</strong>, released by TypeSafe AI on September 15, 2026, is only available as a hosted API, with no weights to run locally or fine-tune. Its open alternative <strong>Laya</strong> (Convai Innovations, Apache 2.0) is a 421M-parameter ModernBERT-large encoder with a decision head. It is non-autoregressive: the input goes through the encoder once and the option probabilities are read from the head.</p>
+
+<p>Laya only reads text, so the scene first went through YOLO detection and the offset was written as a sentence, such as “the apple is 18 centimetres to the left of the gripper”. Phrasing decided everything. Written as <code class="language-plaintext highlighter-rouge">dx=+0.180 m</code>, the model got 1 of 8 directions right; rewritten in plain words and with the magnitude removed from the question, it reached <strong>87.5%</strong> on six-way direction choice (chance is 16.7%). It could not read magnitudes at all: as the distance went from 30 cm down to 1 cm, its probability of choosing a large step stayed between 0.11 and 0.23, and its probability of closing the gripper did not change with distance.</p>
+
+<p><strong>PlayJev</strong> (OmniJev) can see. It is a Jev-style multimodal model built on Qwen3.5-0.8B and trained on frames from small games: given a frame and action options, one forward pass returns a probability for each action. Fed real camera images, it failed. Mirroring the image did not swap its answers, and painting out the target made “left” more likely.</p>
+
+<h3 id="turning-the-robot-into-snake">Turning the robot into Snake</h3>
+
+<p>The fix was to show PlayJev a world it already knows. The offset between gripper and target is measured by the cameras and calibration, then drawn as a <strong>Snake board</strong>: a dark blue grid with a white block for the gripper and a red block for the target, asked with the exact wording of the Snake game. On this board PlayJev chose the right direction in <strong>120 of 120</strong> random states, mirrored boards included, and made 250 correct decisions in a simulated closed loop of 8 targets.</p>
+
+<p>Two details mattered:</p>
+
+<ul>
+  <li>Only axes with at least 30% of the largest offset are drawn. With both axes drawn, the model often corrected the smaller one first.</li>
+  <li>Oscillation in the loop came from step sizes, not from the model, which chose correctly at every step. The per-axis dead zone was set to half a fine step, and the coarse or fine step is chosen from the error on the selected axis rather than the total distance.</li>
+</ul>
+
+<h3 id="grasping-pipeline">Grasping pipeline</h3>
+
+<p>PlayJev only aligns the last few centimetres. Everything else is measured: where the object is, how tall and wide it is, and how hard to squeeze.</p>
+
+<ol>
+  <li>
+<strong>Top-down localization.</strong> A Gemini 335 depth camera above the table runs YOLO-World on a few phrasings of the object from the instruction, with a CLIP check against background descriptions. MobileSAM segments the object, and depth gives its point cloud, support plane, height, width and grasp point. Tall objects are grasped at the top section, so a bottle is grasped by its cap. In click mode, the user clicks the object instead.</li>
+  <li>
+<strong>Graspability.</strong> There is no workspace box. An object is graspable only if the width above the grasp height fits the 98 mm gripper with margin, and inverse kinematics has a solution at the grasp, pre-grasp and transit points.</li>
+  <li>
+<strong>Approach.</strong> The arm moves to a pre-grasp point 10 cm back along the wrist camera’s line of sight, then descends vertically.</li>
+  <li>
+<strong>Wrist hand-off.</strong> The arm jogs ±1 cm along each axis, and optical flow with depth gives the mapping from arm motion to wrist-image motion. If the wrist and top cameras disagree on the object’s height, as with transparent objects, the arm falls back to a straight approach from the top-camera estimate.</li>
+  <li>
+<strong>Force and grasp region.</strong> CLIP classifies the object as fragile, soft or hard, which sets grip force and closing speed, and picks the upper, middle or lower part to grasp.</li>
+  <li>
+<strong>PlayJev servoing.</strong> At each step the offset between the grasp point and the gripper centre is drawn as a Snake board and PlayJev picks a direction, which is mapped to arm motion. Steps are 12 mm when far and 5 mm when close, and alignment is reached below 6 mm.</li>
+  <li>
+<strong>Grasp and verify.</strong> The gripper closes at the chosen force and lifts 60 mm. Success requires both the gripper reading to match the object width and the object to move with the wrist camera.</li>
+</ol>
+
+<p>The arm stops if it receives no command for 0.25 s, so a watchdog thread resends targets while perception runs YOLO-World, CLIP and SAM.</p>
+
+<h3 id="results">Results</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Test</th>
+      <th>Result</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Laya, direction (6-way)</td>
+      <td>87.5% (21/24), chance 16.7%</td>
+    </tr>
+    <tr>
+      <td>Laya, step size (large or small)</td>
+      <td>0%, chance 50%</td>
+    </tr>
+    <tr>
+      <td>PlayJev on real camera images (zero-shot)</td>
+      <td>Unusable</td>
+    </tr>
+    <tr>
+      <td>PlayJev on Snake boards</td>
+      <td>120/120 directions, unchanged under mirroring</td>
+    </tr>
+    <tr>
+      <td>Real-robot grasping</td>
+      <td>Ping-pong ball (2 mm alignment error), blue socket (3.7 mm), yellow tape (4.7 mm), egg (fragile setting), water bottle (by the cap), ball in a tray (straight approach). Failed on a white charger.</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="robotdecision">RobotDecision</h2>
+
+<div class="row">
+    <div class="col-sm mt-3 mt-md-0">
+        
+
+<figure>
+
+  
+
+  <video src="/assets/video/robojev/robotdecision_run.mp4" class="img-fluid rounded z-depth-1" width="auto" height="auto" controls="" muted=""></video>
+
+  
+
+</figure>
+
+    </div>
+</div>
+<div class="caption">
+    A RobotDecision run: top-down view with lettered arrows, wrist view with the green target ring, and side view. Each step shows the chosen action and the stage it belongs to.
+</div>
+
+<p>RobotJev needs a heavy vision pipeline so that the model only chooses a direction. RobotDecision removes it: the <strong>OpenAI Decisions API</strong> looks directly at three camera views (top-down, wrist and side) and picks one preset action per step, driving the AR5 with an Inspire RH56E2 hand to grasp a socket on a whiteboard. The hand uses only thumb and index finger as a two-finger gripper.</p>
+
+<h3 id="what-the-api-is-like">What the API is like</h3>
+
+<ul>
+  <li>It only chooses among given options and never outputs coordinates or distances, so step sizes and safety checks stay in rules.</li>
+  <li>Latency is about 0.4 s for text and 0.7 s with a wrist image.</li>
+  <li>Repeated identical requests return identical answers, so uncertainty cannot be estimated by resampling.</li>
+  <li>Multiple-choice answers depend on option order and are overconfident. Every choice is therefore asked twice, in forward and reversed order, and executed only if both agree. Yes/no probabilities are more reliable and are used for gating.</li>
+  <li>A fixed scene description must be part of the input. Without one, it did not recognize robot fingers filling a quarter of the frame; with a sentence on where the camera is mounted and what the fingers look like, it identified them every time.</li>
+</ul>
+
+<h3 id="finding-the-right-questions">Finding the right questions</h3>
+
+<p>The questions were designed offline on recorded images before moving the arm: 200 sets of three views from a replayed VR demonstration, labelled by forward kinematics, plus 50 sets on a grid above the socket.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Version</th>
+      <th>Question</th>
+      <th>Accuracy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>v1</td>
+      <td>Two images, choose 1 of 10 actions</td>
+      <td>21%, essentially guessing</td>
+    </tr>
+    <tr>
+      <td>v2</td>
+      <td>Lettered direction arrows drawn on the top view, letters shuffled every frame</td>
+      <td>83% horizontal, 83% mirrored</td>
+    </tr>
+    <tr>
+      <td>v3</td>
+      <td>Arrows, plus a green ring on the wrist view and two yes/no questions</td>
+      <td>85% overall; 94% beyond 150 mm, 12% within 60 mm</td>
+    </tr>
+    <tr>
+      <td>v4</td>
+      <td>Adding the side view</td>
+      <td>53%</td>
+    </tr>
+    <tr>
+      <td>v5</td>
+      <td>One combined “next step” question with arrows on the wrist view</td>
+      <td>35%, closes too early</td>
+    </tr>
+    <tr>
+      <td>Split</td>
+      <td>Wrist view only: “which arrow points from the ring to the socket”; a dashed inner ring for closing</td>
+      <td>77% direction; 8/10 correct closes, 0/72 false closes</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Up close, the top view is blocked by the hand, and the model cannot convert a wrist-view offset into a top-view arrow, because the wrist camera is rotated 45° and mirrored relative to the top view. The final design therefore asks by distance: the top view when far, a dedicated wrist question when near, and the double ring to decide when to close.</p>
+
+<h3 id="final-controller">Final controller</h3>
+
+<p>Each step first asks where the socket is relative to the wrist ring, which selects the stage:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Stage</th>
+      <th>Images given</th>
+      <th>Options</th>
+      <th>Step</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Coarse (socket not in wrist view)</td>
+      <td>Top view with four lettered arrows</td>
+      <td>Arrow</td>
+      <td>20 mm</td>
+    </tr>
+    <tr>
+      <td>Approach (outside the ring)</td>
+      <td>Top and wrist views with matching arrows</td>
+      <td>Arrow</td>
+      <td>15 mm</td>
+    </tr>
+    <tr>
+      <td>Inside the ring</td>
+      <td>Wrist view (ring, centre, arrows) and side view</td>
+      <td>Arrow, descend or close</td>
+      <td>5 mm move, 8 mm descent</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>Grasp success is read from the fingers: if both fingers are blocked before reaching their commanded position, the socket is held; on an empty grasp the hand opens, lowers 5 mm and tries again, up to 4 times. Safety uses only physical criteria: reachable IK with under 1 mm error, joint-limit margins, at most 10° per joint per step and a minimum flange height.</p>
+
+<h3 id="results-1">Results</h3>
+
+<p>All <strong>6 real-robot runs held the socket on the first close</strong>, taking 57–107 steps and 176–262 s including placing it back and returning home. The acceptance run took 102 steps and 185 API calls in 262 s, with 35 steps re-asked because the forward and reversed answers disagreed.</p>
+
+<p>Two limits showed up:</p>
+
+<ul>
+  <li>
+<strong>Speed.</strong> A call takes 0.4–0.7 s (median 0.57 s). That is faster than a 4–5 s generative call but about 25 times slower than local PlayJev at 23 ms, and every choice is asked twice.</li>
+  <li>
+<strong>Rotation.</strong> Asked how to rotate the wrist, the model was right 13 of 28 times across both orders (46%), no better than chance, so the grasp orientation is copied from a VR demonstration.</li>
+</ul>
+
+<h2 id="conclusions">Conclusions</h2>
+
+<p>Decision models bring two real advantages to vision-language-action tasks:</p>
+
+<ul>
+  <li>
+<strong>Broad multimodal knowledge without training.</strong> They understand spatial language (Laya, 87.5% on direction), tell whether a target is in view (OpenAI, 91–100%) and read arrows drawn on an image (83%, unchanged under mirroring).</li>
+  <li>
+<strong>Low latency.</strong> One forward pass gives action probabilities: 23 ms for local PlayJev and 0.4–0.7 s for the OpenAI Decisions API, against 4–5 s for a generative call.</li>
+</ul>
+
+<p>Embodied use still needs <strong>domain adaptation</strong>. Zero-shot, the models cannot read magnitudes, cannot see geometry in real images and cannot handle viewpoint rotation. In both projects the adaptation lives entirely in the input, by drawing the state as a game board, adding arrows and rings to images and splitting questions, while the models themselves are not trained.</p>
+
+<h2 id="hardware">Hardware</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Component</th>
+      <th>RobotJev</th>
+      <th>RobotDecision</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Arm</td>
+      <td>Rokae AR5 (7-DoF)</td>
+      <td>Rokae AR5 (7-DoF)</td>
+    </tr>
+    <tr>
+      <td>End effector</td>
+      <td>Hangkai HKVR-TG9801 two-finger gripper (98 mm)</td>
+      <td>Inspire RH56E2 dexterous hand</td>
+    </tr>
+    <tr>
+      <td>Top camera</td>
+      <td>Orbbec Gemini 335</td>
+      <td>Orbbec Gemini 335</td>
+    </tr>
+    <tr>
+      <td>Wrist camera</td>
+      <td>Orbbec Gemini 305</td>
+      <td>Orbbec Gemini 305</td>
+    </tr>
+    <tr>
+      <td>Side camera</td>
+      <td>—</td>
+      <td>UGREEN 1080p</td>
+    </tr>
+    <tr>
+      <td>Compute</td>
+      <td>RTX 5070 Ti 16 GB (PlayJev uses about 3.6 GB)</td>
+      <td>OpenAI Decisions API</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="resources">Resources</h2>
+
+<ul>
+  <li><a href="https://github.com/Vector-xxr/RobotJev" rel="external nofollow noopener" target="_blank">RobotJev source code</a></li>
+  <li><a href="https://github.com/Vector-xxr/RobotDecision" rel="external nofollow noopener" target="_blank">RobotDecision source code</a></li>
+  <li><a href="https://huggingface.co/omnijev/playjev-0.8b" rel="external nofollow noopener" target="_blank">PlayJev model card</a></li>
+  <li><a href="https://runware.ai/blog/jev-laya-and-the-emerging-role-of-decision-models" rel="external nofollow noopener" target="_blank">Jev, Laya and the emerging role of decision models</a></li>
+  <li><a href="https://letsdatascience.com/news/openai-opens-decisions-api-public-beta-b69a1e40" rel="external nofollow noopener" target="_blank">OpenAI Decisions API public beta</a></li>
+</ul>
+
+          </article>
+
+        </div>
+
+          </div>
+        </div>
+        
+      
+    </div>
+
+    <!-- Footer -->    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-copy">
+          © 2026 Yuhang  Song
+        </div>
+        <div class="footer-social">
+          <a href="mailto:%6D%65@%79%68%73%63%6F%64%65.%63%6F%6D" title="email"><i class="fas fa-envelope"></i></a>
+            <a href="https://orcid.org/0009-0008-7920-2997" title="ORCID" rel="external nofollow noopener" target="_blank"><i class="ai ai-orcid"></i></a>
+            <a href="https://scholar.google.com/citations?user=SctJiMEAAAAJ" title="Google Scholar" rel="external nofollow noopener" target="_blank"><i class="ai ai-google-scholar"></i></a>
+            <a href="https://github.com/HuskyKingdom" title="GitHub" rel="external nofollow noopener" target="_blank"><i class="fab fa-github"></i></a>
+            <a href="https://www.linkedin.com/in/yuhang-song-5727b9195" title="LinkedIn" rel="external nofollow noopener" target="_blank"><i class="fab fa-linkedin"></i></a>
+            
+
+        </div>
+      </div>
+    </footer>
+
+
+    <!-- JavaScripts -->
+    <!-- jQuery -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <!-- Bootsrap & MDB scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha256-fgLAgv7fyCGopR/gBNq2iW3ZKIdqIcyshnUULC4vex8=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/js/mdb.min.js" integrity="sha256-NdbiivsvWt7VYCt6hYNT3h/th9vSTL4EDWeGs5SN3DA=" crossorigin="anonymous"></script>
+
+    <!-- Masonry & imagesLoaded -->
+  <script defer src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha256-Nn1q/fx0H7SNLZMQ5Hw5JLaTRZp0yILA/FRexe19VdI=" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+  <script defer src="/assets/js/masonry.js" type="text/javascript"></script>
+    
+  <!-- Medium Zoom JS -->
+  <script defer src="https://cdn.jsdelivr.net/npm/medium-zoom@1.0.8/dist/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+  <script defer src="/assets/js/zoom.js"></script>
+  <!-- Sidebar Table of Contents -->
+  <script defer src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script>
+
+
+  <!-- Bootstrap Table -->
+  <script defer src="https://unpkg.com/bootstrap-table@1.21.4/dist/bootstrap-table.min.js"></script>
+
+  <!-- Load Common JS -->
+  <script src="/assets/js/no_defer.js"></script>
+  <script defer src="/assets/js/common.js"></script>
+  <script defer src="/assets/js/copy_code.js" type="text/javascript"></script>
+
+    
+  <script async src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script>
+  <script async src="https://badge.dimensions.ai/badge.js"></script>
+
+	    <!-- MathJax -->
+  <script type="text/javascript">
+    window.MathJax = {
+      tex: {
+        tags: 'ams'
+      }
+    };
+  </script>
+  <script defer type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script>
+
+	    
+	    
+
+	    <script src="/assets/js/list_pagination.js"></script>
+	  </body>
+	</html>
