@@ -9,7 +9,7 @@ last_name: Song
 email: me@yhscode.com
 description: > # the ">" symbol means to ignore newlines until "footer_text:"
   Yuhang Song (宋宇航) is a Ph.D. student at the University of Liverpool and National Tsing Hua University
-  working on embodied AI, and the founder of TOPSOFT INT (topsoftint.com).
+  working on embodied AI, and the founder of TOPSOFT INT.
   宋宇航，英国利物浦大学与国立清华大学博士生，TOPSOFT INT 创始人。
 footer_text: >
   Powered by <a href="https://github.com/alshedivat/al-folio">al-folio</a> theme.
@@ -29,7 +29,6 @@ seo:
   organization:
     name: TOPSOFT INT
     alternate_names: [TOPSOFT, TOPSOFT Group, topsoftint, TOPSOFT 极致网络]
-    url: https://www.topsoftint.com/
     founding_year: "2016"
   knows_about: [Embodied AI, World Action Model, Physical Intelligence, Robotics, Deep Reinforcement Learning, Vision-and-Language Navigation]
 
@@ -125,7 +124,7 @@ discord_id: # your discord id (18-digit unique numerical identifier)
 wechat_qr: wechat-qr.png
 
 contact_note: >
-  <a href="https://www.vicicode.com/">VICI CODE</a> |  <a href="https://www.topsoftint.com/">TOPSOFT INT</a>
+  <a href="https://www.vicicode.com/">VICI CODE</a> | TOPSOFT INT
 
 # -----------------------------------------------------------------------------
 # Analytics and search engine verification

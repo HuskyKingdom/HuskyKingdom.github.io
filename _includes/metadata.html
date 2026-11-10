@@ -242,7 +242,9 @@
             "@id": {{ org_id | jsonify }},
             "name": {{ site.seo.organization.name | jsonify }},
             "alternateName": {{ site.seo.organization.alternate_names | jsonify }},
+            {%- if site.seo.organization.url %}
             "url": {{ site.seo.organization.url | jsonify }},
+            {%- endif %}
             "foundingDate": {{ site.seo.organization.founding_year | jsonify }},
             "founder": { "@id": {{ person_id | jsonify }} }
           },
