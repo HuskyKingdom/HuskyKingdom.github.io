@@ -190,6 +190,8 @@ collections:
       layout: post
     output: false  # every item is shown inline, so no thin per-item pages
     permalink: /news/:path/
+  redirects:  # old URLs that moved; see _layouts/redirect.html
+    output: true
   projects:
     output: true
     permalink: /projects/:path/
@@ -261,6 +263,12 @@ defaults:
   - scope:
       path: "assets"
     values:
+      sitemap: false
+  - scope:
+      path: ""
+      type: redirects
+    values:
+      layout: redirect
       sitemap: false
 
 # -----------------------------------------------------------------------------
