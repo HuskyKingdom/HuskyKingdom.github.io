@@ -1,20 +1,19 @@
 ---
-layout: post
-title: "From Motion Tracking to Steady Walking: Taking an In-House Humanoid from Simulation to the Real World"
-date: 2026-11-10 10:00:00+0800
-description: How we took our in-house humanoid crp from dancing in simulation to walking on a gamepad and playing motions at the press of a button, with world-model policy learning from SuperMimic.
-categories: industrial
-tags: [humanoid, locomotion, world-model, sim2real]
-related_posts: false
+layout: page
+title: "crp Humanoid: From Motion Tracking to Steady Walking"
+description: Taking our in-house humanoid crp from dancing in simulation to walking on a gamepad and playing motions at the press of a button, with world-model policy learning from SuperMimic.
+img: assets/img/crp/cover.jpg
+importance: -2
+category: Industrial
 toc:
   sidebar: left
 ---
 
-This post covers how we took our own humanoid from "dances in simulation" to "walks on the floor with a gamepad and plays motions at the press of a button": how we trained motion tracking, how the walking policy evolved, and what finally runs on the robot.
+This project covers how we took our own humanoid from "dances in simulation" to "walks on the floor with a gamepad and plays motions at the press of a button": how we trained motion tracking, how the walking policy evolved, and what finally runs on the robot.
 
 <div class="row justify-content-center">
     <div class="col-sm-5 mt-3 mt-md-0">
-        {% include video.html path="assets/video/blog/crp/walk_outdoor.mp4" class="img-fluid rounded z-depth-1" controls=true muted=true %}
+        {% include video.html path="assets/video/crp/walk_outdoor.mp4" class="img-fluid rounded z-depth-1" controls=true muted=true %}
     </div>
 </div>
 <div class="caption">
@@ -61,13 +60,13 @@ In the end, three gamepad buttons trigger three motions: a wave, pointing forwar
 
 <div class="row">
     <div class="col-sm mt-3 mt-md-0">
-        {% include video.html path="assets/video/blog/crp/tracking_1.mp4" class="img-fluid rounded z-depth-1" controls=true muted=true %}
+        {% include video.html path="assets/video/crp/tracking_1.mp4" class="img-fluid rounded z-depth-1" controls=true muted=true %}
     </div>
     <div class="col-sm mt-3 mt-md-0">
-        {% include video.html path="assets/video/blog/crp/tracking_2.mp4" class="img-fluid rounded z-depth-1" controls=true muted=true %}
+        {% include video.html path="assets/video/crp/tracking_2.mp4" class="img-fluid rounded z-depth-1" controls=true muted=true %}
     </div>
     <div class="col-sm mt-3 mt-md-0">
-        {% include video.html path="assets/video/blog/crp/tracking_3.mp4" class="img-fluid rounded z-depth-1" controls=true muted=true %}
+        {% include video.html path="assets/video/crp/tracking_3.mp4" class="img-fluid rounded z-depth-1" controls=true muted=true %}
     </div>
 </div>
 <div class="caption">
@@ -95,16 +94,16 @@ Every version followed the same loop: the robot shows a problem → recorded dat
 
 <div class="row">
     <div class="col-sm-6 mt-3 mt-md-0">
-        {% include video.html path="assets/video/blog/crp/sim_smoke_200.mp4" class="img-fluid rounded z-depth-1" controls=true muted=true %}
+        {% include video.html path="assets/video/crp/sim_smoke_200.mp4" class="img-fluid rounded z-depth-1" controls=true muted=true %}
     </div>
     <div class="col-sm-6 mt-3 mt-md-0">
-        {% include video.html path="assets/video/blog/crp/sim_gait_dp_2000.mp4" class="img-fluid rounded z-depth-1" controls=true muted=true %}
+        {% include video.html path="assets/video/crp/sim_gait_dp_2000.mp4" class="img-fluid rounded z-depth-1" controls=true muted=true %}
     </div>
     <div class="col-sm-6 mt-3">
-        {% include video.html path="assets/video/blog/crp/sim_gait_dp_4000.mp4" class="img-fluid rounded z-depth-1" controls=true muted=true %}
+        {% include video.html path="assets/video/crp/sim_gait_dp_4000.mp4" class="img-fluid rounded z-depth-1" controls=true muted=true %}
     </div>
     <div class="col-sm-6 mt-3">
-        {% include video.html path="assets/video/blog/crp/sim_natural_8000.mp4" class="img-fluid rounded z-depth-1" controls=true muted=true %}
+        {% include video.html path="assets/video/crp/sim_natural_8000.mp4" class="img-fluid rounded z-depth-1" controls=true muted=true %}
     </div>
 </div>
 <div class="caption">
@@ -113,10 +112,10 @@ Every version followed the same loop: the robot shows a problem → recorded dat
 
 <div class="row justify-content-center">
     <div class="col-sm-4 mt-3 mt-md-0">
-        {% include video.html path="assets/video/blog/crp/walk_lab_early.mp4" class="img-fluid rounded z-depth-1" controls=true muted=true %}
+        {% include video.html path="assets/video/crp/walk_lab_early.mp4" class="img-fluid rounded z-depth-1" controls=true muted=true %}
     </div>
     <div class="col-sm-4 mt-3 mt-md-0">
-        {% include video.html path="assets/video/blog/crp/walk_lab.mp4" class="img-fluid rounded z-depth-1" controls=true muted=true %}
+        {% include video.html path="assets/video/crp/walk_lab.mp4" class="img-fluid rounded z-depth-1" controls=true muted=true %}
     </div>
 </div>
 <div class="caption">
