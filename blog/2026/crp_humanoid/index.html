@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <!-- Head -->
+  <head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">    <!-- Metadata, OpenGraph and Schema.org -->
+    
+
+    <!-- Standard metadata -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>From Motion Tracking to Steady Walking: Taking an In-House Humanoid from Simulation to the Real World | Yuhang Song</title>
+    <meta name="author" content="Yuhang Song">
+    <meta name="description" content="How we took our in-house humanoid crp from dancing in simulation to walking on a gamepad and playing motions at the press of a button, with world-model policy learning from SuperMimic.">
+    <meta name="keywords" content="Yuhang Song, 宋宇航, Yuhang Song Liverpool, University of Liverpool, National Tsing Hua University, TOPSOFT, TOPSOFT INT, topsoftint, 英国利物浦大学, 国立清华大学, topsoft 极致网络, embodied AI">
+
+    <!-- OpenGraph -->
+    <meta property="og:site_name" content="Yuhang Song">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="From Motion Tracking to Steady Walking: Taking an In-House Humanoid from Simulation to the Real World | Yuhang Song">
+    <meta property="og:url" content="https://yhscode.com/blog/2026/crp_humanoid/">
+    <meta property="og:description" content="How we took our in-house humanoid crp from dancing in simulation to walking on a gamepad and playing motions at the press of a button, with world-model policy learning from SuperMimic.">
+    <meta property="og:image" content="https://yhscode.com/assets/img/og_card.jpg">
+    <meta property="og:image:alt" content="Yuhang Song (宋宇航)">
+    <meta property="og:locale" content="en_GB">
+    <meta property="og:locale:alternate" content="zh_CN">
+
+    <!-- Twitter card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="From Motion Tracking to Steady Walking: Taking an In-House Humanoid from Simulation to the Real World | Yuhang Song">
+    <meta name="twitter:description" content="How we took our in-house humanoid crp from dancing in simulation to walking on a gamepad and playing motions at the press of a button, with world-model policy learning from SuperMimic.">
+    <meta name="twitter:image" content="https://yhscode.com/assets/img/og_card.jpg">
+    
+
+    <!-- Schema.org -->
+    
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "Person",
+            "@id": "https://yhscode.com/#person",
+            "name": "Yuhang Song",
+            "alternateName": "宋宇航",
+            "givenName": "Yuhang",
+            "familyName": "Song",
+            "url": "https://yhscode.com/",
+            "image": "https://yhscode.com/assets/img/og_card.jpg",
+            "jobTitle": "Ph.D. Student",
+            "affiliation": [
+              { "@type": "CollegeOrUniversity", "name": "University of Liverpool", "url": "https://www.liverpool.ac.uk/" },
+              { "@type": "CollegeOrUniversity", "name": "National Tsing Hua University", "url": "https://www.nthu.edu.tw/" }
+            ],
+            "worksFor": { "@id": "https://yhscode.com/#organization" },
+            "knowsAbout": ["Embodied AI","World Action Model","Physical Intelligence","Robotics","Deep Reinforcement Learning","Vision-and-Language Navigation"],
+            "sameAs": ["https://orcid.org/0009-0008-7920-2997","https://scholar.google.com/citations?user=SctJiMEAAAAJ","https://github.com/HuskyKingdom","https://www.linkedin.com/in/yuhang-song-5727b9195"]
+          },
+          {
+            "@type": "Organization",
+            "@id": "https://yhscode.com/#organization",
+            "name": "TOPSOFT INT",
+            "alternateName": ["TOPSOFT","TOPSOFT Group","topsoftint","TOPSOFT 极致网络"],
+            "url": "https://www.topsoftint.com/",
+            "foundingDate": "2016",
+            "founder": { "@id": "https://yhscode.com/#person" }
+          },
+          {
+            "@type": "WebSite",
+            "@id": "https://yhscode.com/#website",
+            "url": "https://yhscode.com/",
+            "name": "Yuhang Song",
+            "alternateName": "宋宇航",
+            "inLanguage": ["en", "zh"],
+            "publisher": { "@id": "https://yhscode.com/#person" }
+          },
+          {
+            "@type": "WebPage",
+            "@id": "https://yhscode.com/blog/2026/crp_humanoid/",
+            "url": "https://yhscode.com/blog/2026/crp_humanoid/",
+            "name": "From Motion Tracking to Steady Walking: Taking an In-House Humanoid from Simulation to the Real World | Yuhang Song",
+            "description": "How we took our in-house humanoid crp from dancing in simulation to walking on a gamepad and playing motions at the press of a button, with world-model policy learning from SuperMimic.",
+            "isPartOf": { "@id": "https://yhscode.com/#website" },
+            "about": { "@id": "https://yhscode.com/#person" }
+          }
+        ]
+      }
+    </script>
+
+
+    <!-- Bootstrap & MDB -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha256-DF7Zhf293AJxJNTmh5zhoYYIMs2oXitRfBjY+9L//AY=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/css/mdb.min.css" integrity="sha256-jpjYvU3G3N6nrrBwXJoVEYI/0zw8htfFnhT9ljN3JJw=" crossorigin="anonymous">
+
+    <!-- Bootstrap Table -->
+    <link defer rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.21.4/dist/bootstrap-table.min.css">
+
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" integrity="sha256-HtsXJanqjKTc8vVQjO4YMhiqFoXkfBsjBWcX91T1jr8=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/academicons@1.9.1/css/academicons.min.css" integrity="sha256-i1+4qU2G2860dGGIOJscdC30s9beBXjFfzjWLjBRsBg=" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,400&amp;family=Space+Grotesk:wght@400;500;600;700&amp;display=swap">
+
+    <!-- Code Syntax Highlighting -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jwarby/jekyll-pygments-themes@master/github.css" media="" id="highlight_theme_light">
+
+    
+    <!-- Sidebar Table of Contents -->
+    <link href="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.css" rel="stylesheet">
+    
+
+    <!-- Styles -->
+    
+    <link rel="shortcut icon" href="data:image/svg+xml,&lt;svg%20xmlns=%22http://www.w3.org/2000/svg%22%20viewBox=%220%200%20100%20100%22&gt;&lt;text%20y=%22.9em%22%20font-size=%2290%22&gt;H&lt;/text&gt;&lt;/svg&gt;">
+    
+    <link rel="stylesheet" href="/assets/css/main.css">
+    <link rel="canonical" href="https://yhscode.com/blog/2026/crp_humanoid/">
+
+    <!-- Dark Mode -->
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/jwarby/jekyll-pygments-themes@master/native.css" media="none" id="highlight_theme_dark">
+
+    <script src="/assets/js/theme.js"></script>
+    <script src="/assets/js/dark_mode.js"></script>
+    
+
+  </head>
+
+  <!-- Body -->
+  <body class="fixed-top-nav sticky-bottom-footer">
+
+    <!-- Header -->
+    <header>
+
+      <!-- Nav Bar -->
+      <nav id="navbar" class="navbar navbar-light navbar-expand-sm fixed-top">
+        <div class="container">
+          <a class="navbar-brand title" href="/">Yuhang Song</a>
+          <!-- Navbar Toggle -->
+          <button class="navbar-toggler collapsed ml-auto" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar top-bar"></span>
+            <span class="icon-bar middle-bar"></span>
+            <span class="icon-bar bottom-bar"></span>
+          </button>
+
+          <div class="collapse navbar-collapse text-right" id="navbarNav">
+            <ul class="navbar-nav ml-auto flex-nowrap">
+
+              <!-- About -->
+              <li class="nav-item ">
+                <a class="nav-link" href="/">About</a>
+              </li>
+              
+              <!-- Blog -->
+              <li class="nav-item active">
+                <a class="nav-link" href="/blog/">Blog<span class="sr-only">(current)</span></a>
+              </li>
+
+              <!-- Other pages -->
+              <li class="nav-item ">
+                <a class="nav-link" href="/projects/">Projects</a>
+              </li>
+
+              <!-- Toogle theme mode -->
+              <li class="toggle-container">
+                <button id="light-toggle" title="Change theme">
+                  <i class="fas fa-moon"></i>
+                  <i class="fas fa-sun"></i>
+                </button>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </nav>
+
+    </header>
+
+
+    <!-- Content -->
+    <div class="container mt-5">
+      
+        
+        <div class="row">
+          <!-- sidebar, which will move to the top on a small screen -->
+          <div class="col-sm-3">
+            <nav id="toc-sidebar" class="sticky-top"></nav>
+          </div>
+          <!-- main content area -->
+          <div class="col-sm-9">
+            <!-- _layouts/post.html -->
+
+<div class="post article-page">
+
+  <header class="post-header">
+    <h1 class="post-title">From Motion Tracking to Steady Walking: Taking an In-House Humanoid from Simulation to the Real World</h1>
+    <p class="post-meta">November 10, 2026</p>
+    <p class="post-tags">
+      <a href="/blog/2026"> <i class="fas fa-calendar fa-sm"></i> 2026 </a>
+        ·  
+        <a href="/blog/tag/humanoid">
+          <i class="fas fa-hashtag fa-sm"></i> humanoid</a>  
+          <a href="/blog/tag/locomotion">
+          <i class="fas fa-hashtag fa-sm"></i> locomotion</a>  
+          <a href="/blog/tag/world-model">
+          <i class="fas fa-hashtag fa-sm"></i> world-model</a>  
+          <a href="/blog/tag/sim2real">
+          <i class="fas fa-hashtag fa-sm"></i> sim2real</a>  
+          
+        ·  
+        <a href="/blog/category/industrial">
+          <i class="fas fa-tag fa-sm"></i> industrial</a>  
+          
+
+    </p>
+  </header>
+
+  <article class="post-content">
+    
+    <div id="markdown-content">
+      <p>This post covers how we took our own humanoid from “dances in simulation” to “walks on the floor with a gamepad and plays motions at the press of a button”: how we trained motion tracking, how the walking policy evolved, and what finally runs on the robot.</p>
+
+<div class="row justify-content-center">
+    <div class="col-sm-5 mt-3 mt-md-0">
+        
+
+<figure>
+
+  
+
+  <video src="/assets/video/blog/crp/walk_outdoor.mp4" class="img-fluid rounded z-depth-1" width="auto" height="auto" controls="" muted=""></video>
+
+  
+
+</figure>
+
+    </div>
+</div>
+<div class="caption">
+    crp walking outdoors, driven by the gamepad.
+</div>
+
+<h2 id="the-robot-and-the-method">The robot and the method</h2>
+
+<p><strong>The robot.</strong> crp (model RHM-D1F00-B):</p>
+
+<ul>
+  <li>59.7 kg, with legs about 1.3× as long as a Unitree G1’s;</li>
+  <li>31 motors, 23 of them driven by the policy (6 per leg, waist yaw, 5 per arm); waist roll/pitch, head and wrists are held still;</li>
+  <li>parallel-linkage ankles (two motors per ankle);</li>
+  <li>ROS2 underneath.</li>
+</ul>
+
+<p><strong>The method.</strong> Training uses SuperMimic from <a href="https://github.com/HuskyKingdom/morphmimic" rel="external nofollow noopener" target="_blank">MorphMimic</a>:</p>
+
+<ul>
+  <li>A <strong>world model</strong> learns “state + action → next state” from simulation data.</li>
+  <li>The <strong>policy</strong> “imagines” 32 steps inside the world model. Rewards are differentiable with respect to the states, so the policy is updated by backpropagating straight through the imagined rollout. This is not trial-and-error sampling as in PPO, and it needs far fewer samples.</li>
+  <li>The world model only describes physics and knows nothing about the task. Once trained for motion tracking, it is reused for walking, and only a new policy is trained.</li>
+</ul>
+
+<p>Training ran on an offline H100. The policies run on the robot’s own x86 computer.</p>
+
+<h2 id="step-1-motion-tracking">Step 1: Motion tracking</h2>
+
+<p><strong>Data.</strong> We transferred the BONES-SEED motion data from the G1 to crp joint by joint: 127k clips, 258 hours in total.</p>
+
+<p><strong>Training.</strong> One H100, 40,000 iterations, about two days. In simulation:</p>
+
+<ul>
+  <li>all 16 test motions completed;</li>
+  <li>mean joint error 0.090 rad;</li>
+  <li>push recovery 48/48.</li>
+</ul>
+
+<p><strong>What broke on the real robot:</strong></p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Symptom</th>
+      <th>Cause</th>
+      <th>Fix</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>The robot moves on its own while “standing”</td>
+      <td>The ankles are linkages, but we sent joint angles straight to the linkage motors</td>
+      <td>Ported the vendor’s parallel-ankle solver</td>
+    </tr>
+    <tr>
+      <td>A whole leg goes limp mid-motion</td>
+      <td>A CAN bus drops out; frozen readings keep being published</td>
+      <td>Any missing or frozen motor damps the whole body immediately</td>
+    </tr>
+    <tr>
+      <td>Actions often arrive one tick late</td>
+      <td>Inference takes ~9 ms, but we only waited 10 ms</td>
+      <td>Wait 18 ms</td>
+    </tr>
+    <tr>
+      <td>Unplugging the laptop cable stops the robot</td>
+      <td>ROS2 traffic was routed through that cable</td>
+      <td>Route the robot’s internal traffic over loopback</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>In the end, three gamepad buttons trigger three motions: a wave, pointing forward, and a short disco dance.</p>
+
+<div class="row">
+    <div class="col-sm mt-3 mt-md-0">
+        
+
+<figure>
+
+  
+
+  <video src="/assets/video/blog/crp/tracking_1.mp4" class="img-fluid rounded z-depth-1" width="auto" height="auto" controls="" muted=""></video>
+
+  
+
+</figure>
+
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+        
+
+<figure>
+
+  
+
+  <video src="/assets/video/blog/crp/tracking_2.mp4" class="img-fluid rounded z-depth-1" width="auto" height="auto" controls="" muted=""></video>
+
+  
+
+</figure>
+
+    </div>
+    <div class="col-sm mt-3 mt-md-0">
+        
+
+<figure>
+
+  
+
+  <video src="/assets/video/blog/crp/tracking_3.mp4" class="img-fluid rounded z-depth-1" width="auto" height="auto" controls="" muted=""></video>
+
+  
+
+</figure>
+
+    </div>
+</div>
+<div class="caption">
+    Motion tracking on the real crp.
+</div>
+
+<h2 id="step-2-walking">Step 2: Walking</h2>
+
+<p>Walking is not a separate RL setup. It is a new “velocity command” task inside the same framework:</p>
+
+<ul>
+  <li>the goal is [forward speed, sideways speed, turn rate] plus a gait clock that tells each foot when to lift;</li>
+  <li>the rewards are computed on world-model states.</li>
+</ul>
+
+<h3 id="part-one-from-walking-at-all-to-walking-decently">Part one: from walking at all to walking decently</h3>
+
+<p>Every version followed the same loop: the robot shows a problem → recorded data tells us why → we reproduce it in simulation → we fix it.</p>
+
+<ol>
+  <li>
+<strong>Tripping over its own feet.</strong> Foot lift was measured at the ankle joint: the ankle rose 9 cm while the toe cleared the floor by only 0.5 cm. We now measure the lowest point of the sole.</li>
+  <li>
+<strong>Stomping.</strong> We added a double-support phase, a smooth swing curve, flat feet, a minimum foot spacing and counter-swinging arms. The result, <code class="language-plaintext highlighter-rouge">natural</code>, was the first version that walked well on the robot.</li>
+  <li>
+<strong>Leaning left until it fell.</strong> The real ankle roll was only about 1/5 as stiff as in training: the linkage motors’ gains were tuned for pitch, and the roll feedforward had been switched off. Adding the feedforward every control tick mostly fixed the lean.</li>
+  <li>
+<strong>Left knee at 82 °C, then off the bus.</strong> The policy had learned to stand braced on one leg, with the left knee holding 60 Nm. A joint-torque penalty plus a left-right symmetry loss brought each knee to about 29 Nm.</li>
+  <li>
+<strong>Swaying upper body, tipping over when stopping.</strong> The motors holding the waist were only half as stiff as commanded, with torque capped at about 42 Nm. We modelled the waist as a spring in simulation and trained a wider stance.</li>
+  <li>
+<strong>Leaning back and stepping in place.</strong> Both ankle pitch zeros were off by about 3°, so the real robot’s center of mass (CoM) sat 3–4 cm further back than in simulation. We randomized ankle zero errors in training and kept enough CoM margin.</li>
+  <li>
+<strong>Adversarial motion priors (AMP)</strong>, to look more human: the feet dragged and turning drifted, so we dropped it.</li>
+</ol>
+
+<div class="row">
+    <div class="col-sm-6 mt-3 mt-md-0">
+        
+
+<figure>
+
+  
+
+  <video src="/assets/video/blog/crp/sim_smoke_200.mp4" class="img-fluid rounded z-depth-1" width="auto" height="auto" controls="" muted=""></video>
+
+  
+
+</figure>
+
+    </div>
+    <div class="col-sm-6 mt-3 mt-md-0">
+        
+
+<figure>
+
+  
+
+  <video src="/assets/video/blog/crp/sim_gait_dp_2000.mp4" class="img-fluid rounded z-depth-1" width="auto" height="auto" controls="" muted=""></video>
+
+  
+
+</figure>
+
+    </div>
+    <div class="col-sm-6 mt-3">
+        
+
+<figure>
+
+  
+
+  <video src="/assets/video/blog/crp/sim_gait_dp_4000.mp4" class="img-fluid rounded z-depth-1" width="auto" height="auto" controls="" muted=""></video>
+
+  
+
+</figure>
+
+    </div>
+    <div class="col-sm-6 mt-3">
+        
+
+<figure>
+
+  
+
+  <video src="/assets/video/blog/crp/sim_natural_8000.mp4" class="img-fluid rounded z-depth-1" width="auto" height="auto" controls="" muted=""></video>
+
+  
+
+</figure>
+
+    </div>
+</div>
+<div class="caption">
+    Walking policies in simulation under the same velocity-command sequence: a 200-iteration smoke test (top left), the gait version at 2,000 and 4,000 iterations (top right, bottom left), and <code>natural</code> at 8,000 iterations (bottom right).
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-sm-4 mt-3 mt-md-0">
+        
+
+<figure>
+
+  
+
+  <video src="/assets/video/blog/crp/walk_lab_early.mp4" class="img-fluid rounded z-depth-1" width="auto" height="auto" controls="" muted=""></video>
+
+  
+
+</figure>
+
+    </div>
+    <div class="col-sm-4 mt-3 mt-md-0">
+        
+
+<figure>
+
+  
+
+  <video src="/assets/video/blog/crp/walk_lab.mp4" class="img-fluid rounded z-depth-1" width="auto" height="auto" controls="" muted=""></video>
+
+  
+
+</figure>
+
+    </div>
+</div>
+<div class="caption">
+    Walking tests on the real robot in the lab: an earlier version (left) and a later one (right).
+</div>
+
+<h3 id="part-two-human-like-and-stable">Part two: human-like and stable</h3>
+
+<p><strong>Motion capture as the yardstick.</strong> One forward-kinematics pipeline computes the same quantities from pelvis attitude and joint angles: stance-knee angle, how far the CoM is ahead of the ankle, and pelvis pitch. That put human mocap, simulation and the real robot side by side. The policy’s legs were too bent (stance knee 23–27°, humans 7–10°), and on the real robot the CoM sat behind the ankles.</p>
+
+<p>Then came a game of whack-a-mole:</p>
+
+<ul>
+  <li>
+<strong>Straight-leg posture reference + CoM term:</strong> simulation improved, but the real robot leaned back. The policy didn’t trust its IMU, because encoder zero errors never made it into imagination.</li>
+  <li>
+<strong>Encoder zero errors in imagination:</strong> the policy started using the IMU, but now swung its arms sideways for balance.</li>
+  <li>
+<strong>A separate arm constraint:</strong> the arms calmed down, but the ankle motors overheated (heat proxy 303).</li>
+  <li>
+<strong>Ankle torque penalty:</strong> the policy learned to crouch against the ankles’ mechanical stops, since the stops carry load for free.</li>
+  <li>
+<strong>Joint-limit margin + stance-leg posture cost:</strong> no more crouching, but the CoM slowly drifted back again.</li>
+</ul>
+
+<p><strong>What worked: using the human gait itself as the reference.</strong> We extracted each joint’s mean curve over the gait cycle from mocap, scaled it with speed, and had the policy track it. Sideways arm swing dropped from 30° to 5°, matching humans. This version (<code class="language-plaintext highlighter-rouge">human7</code>, checkpoint 6000) stopped and stood steadily on the real robot, but still leaned and drifted left while walking.</p>
+
+<h3 id="the-last-round-removing-the-lean-and-the-drift">The last round: removing the lean and the drift</h3>
+
+<p><strong>Finding the cause (all from real-robot data):</strong></p>
+
+<ul>
+  <li>Standing with both soles flat, the joint readings put the right foot at a 2.4° tilt: the right ankle roll has a zero error.</li>
+  <li>The right ankle roll’s tracking error is 35–50% larger than the left’s, and the right knee and hip yaw deliver 10–15% less torque: <strong>the right leg is softer</strong>.</li>
+  <li>In simulation, a right leg at 80% stiffness reproduces the real left lean and drift. A zero error alone does not.</li>
+</ul>
+
+<p><strong>Detours along the way:</strong></p>
+
+<ul>
+  <li>
+<strong>A pelvis-tilt penalty</strong> looked great in simulation, but the real robot shook at 6–7 Hz. The policy had become a high-gain controller, and the robot’s tens of milliseconds of latency made it oscillate. A 40 ms action delay in simulation reproduces it, and every version is now tested against it.</li>
+  <li>
+<strong>Tighter posture constraints</strong> sent the arms flailing again, so we added an arm constraint that never saturates.</li>
+  <li>
+<strong>The lean’s direction depended on the random seed.</strong> A symmetry loss only encourages symmetry; the policy itself was never exactly symmetric.</li>
+</ul>
+
+<p><strong>The final recipe</strong>, informed by the randomization used in mainstream frameworks such as <a href="https://arxiv.org/pdf/2506.15132" rel="external nofollow noopener" target="_blank">Booster Gym</a> and by work on <a href="https://arxiv.org/abs/2609.02306" rel="external nofollow noopener" target="_blank">joint-offset calibration</a> and <a href="https://arxiv.org/pdf/2508.01247" rel="external nofollow noopener" target="_blank">symmetric policies</a>:</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Problem</th>
+      <th>What we did</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>The two legs differ</td>
+      <td>In imagination, each leg joint gets a random stiffness of ±25%, independently per side; zero errors affect both the reading and the executed target</td>
+    </tr>
+    <tr>
+      <td>Control latency</td>
+      <td>0–20 ms of random latency in imagination</td>
+    </tr>
+    <tr>
+      <td>Lean direction depends on the seed</td>
+      <td>
+<strong>Symmetric inference</strong>: average the policy’s action with the mirrored action on the mirrored input. The policy becomes exactly left-right symmetric, with no retraining</td>
+    </tr>
+    <tr>
+      <td>Doesn’t walk straight</td>
+      <td>Gamepad <strong>heading hold</strong>: when only pushing forward or back, the IMU locks the heading</td>
+    </tr>
+    <tr>
+      <td>Hot ankles</td>
+      <td>The full ankle-motor torque penalty, tripled</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><strong>Acceptance.</strong> One night, six GPUs, several variants in parallel. Every checkpoint was automatically checked against the failures we had already hit:</p>
+
+<ul>
+  <li>falls and speed tracking;</li>
+  <li>shaking under a 40 ms delay;</li>
+  <li>flailing arms;</li>
+  <li>ankle load;</li>
+  <li>lean and drift during a 20 s straight walk, with normal legs and with a “soft right leg”;</li>
+  <li>stopping cleanly.</li>
+</ul>
+
+<p>The winner was <code class="language-plaintext highlighter-rouge">p_4000</code>. Under conditions closest to the real robot (right leg 20% softer, 20 ms latency, right ankle zero error):</p>
+
+<table>
+  <thead>
+    <tr>
+      <th> </th>
+      <th>Pelvis sideways offset</th>
+      <th>Roll</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Previous best, human7_6000</td>
+      <td>1.8 cm</td>
+      <td>1.42°</td>
+    </tr>
+    <tr>
+      <td>Final, p_4000</td>
+      <td>0.6 cm</td>
+      <td>0.28°</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>On the real robot it is the best-walking version so far.</p>
+
+<h2 id="how-it-runs-on-the-robot">How it runs on the robot</h2>
+
+<p>Everything runs on the robot’s own computer; no laptop needed:</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gamepad ──► joy_node ──► crp_node (50 Hz) ◄──► motion_control (vendor ROS2 motor driver)
+                           │  · sticks → velocity command (with heading hold)
+                           │  · parallel-ankle solver + roll feedforward, IMU mounting correction
+                           │  · motor dropout / frozen readings → damp the whole body
+                           ▼
+                        policy process (walk_clips)
+                           · walking policy (ONNX on CPU, ~1.6 ms per tick with symmetrization)
+                           · motion-tracking policy (wave / point / dance)
+</code></pre></div></div>
+
+<ul>
+  <li>
+<strong>Starts at boot.</strong> A systemd service starts the stack in a damped state. Start stands the robot up, A starts walking, and B damps at any time.</li>
+  <li>
+<strong>Gamepad.</strong>
+    <ul>
+      <li>Left stick: forward/back and sideways. Right stick: turn.</li>
+      <li>X, Y and RB play motion clips: the robot stops, takes a settling step, plays the clip, then resumes walking.</li>
+    </ul>
+  </li>
+  <li>
+<strong>Configuration.</strong> Everything lives in one <code class="language-plaintext highlighter-rouge">walk.env</code>: which policy, symmetric inference on/off, heading-hold gain, ankle feedforward, IMU correction.</li>
+  <li>
+<strong>Data.</strong> Every run records joints, IMU and motor torques for analyzing the next version.</li>
+  <li>
+<strong>Updates.</strong> One command pushes a new policy and code to the robot. Files are written to a temp name and then renamed, so the running service never reads a half-written file. After editing <code class="language-plaintext highlighter-rouge">walk.env</code>, restart while damped.</li>
+</ul>
+
+<h2 id="takeaways">Takeaways</h2>
+
+<ul>
+  <li>
+<strong>Build the yardstick before tuning rewards.</strong> Comparing human mocap, simulation and the real robot with the same metrics is what made problems clear.</li>
+  <li>
+<strong>Reproduce real-robot problems in simulation first.</strong> The left lean, the backward lean and the shaking were all reproduced in simulation before we found their real causes.</li>
+  <li>
+<strong>Every patch invites the next shortcut.</strong> Rather than piling on penalties, give the policy a good reference (human gait) and back it with a strict acceptance checklist.</li>
+  <li>
+<strong>Add latency, actuator and zero-offset randomization early.</strong> Mainstream open-source frameworks include them from the start; we had to be forced there by the robot, one failure at a time.</li>
+  <li>
+<strong>Guarantee symmetry by construction.</strong> A loss can only encourage it; symmetric inference guarantees it.</li>
+</ul>
+
+<p>Next up: having the vendor recalibrate the parallel-ankle zeros, and voice control (“Xiaonuo, Xiaonuo, wave!”).</p>
+
+    </div>
+  </article><div id="giscus_thread" style="max-width: 800px; margin: 0 auto;">
+  <script>
+    let giscusTheme = localStorage.getItem("theme");
+    let giscusAttributes = {
+        "src": "https://giscus.app/client.js",
+        "data-repo": "HuskyKingdom/HuskyKingdom.github.io",
+        "data-repo-id": "R_kgDOJyt65Q",
+        "data-category": "Q&A",
+        "data-category-id": "DIC_kwDOJyt65c4C6GqC",
+        "data-mapping": "pathname",
+        "data-strict": "0",
+        "data-reactions-enabled": "1",
+        "data-emit-metadata": "0",
+        "data-input-position": "bottom",
+        "data-theme": giscusTheme,
+        "data-lang": "zh-CN",
+        "crossorigin": "anonymous",
+        "async": "",
+    };
+
+
+    let giscusScript = document.createElement("script");
+    Object.entries(giscusAttributes).forEach(([key, value]) => giscusScript.setAttribute(key, value));
+    document.getElementById("giscus_thread").appendChild(giscusScript);
+  </script>
+  <noscript>Please enable JavaScript to view the <a href="http://giscus.app/?ref_noscript" rel="external nofollow noopener" target="_blank">comments powered by giscus.</a>
+</noscript>
+</div>
+</div>
+
+          </div>
+        </div>
+        
+      
+    </div>
+
+    <!-- Footer -->    <footer class="site-footer">
+      <div class="container">
+        <div class="footer-copy">
+          © 2026 Yuhang Song
+        </div>
+        <div class="footer-social">
+          <a href="mailto:%6D%65@%79%68%73%63%6F%64%65.%63%6F%6D" title="email"><i class="fas fa-envelope"></i></a>
+            <a href="https://orcid.org/0009-0008-7920-2997" title="ORCID" rel="external nofollow noopener" target="_blank"><i class="ai ai-orcid"></i></a>
+            <a href="https://scholar.google.com/citations?user=SctJiMEAAAAJ" title="Google Scholar" rel="external nofollow noopener" target="_blank"><i class="ai ai-google-scholar"></i></a>
+            <a href="https://github.com/HuskyKingdom" title="GitHub" rel="external nofollow noopener" target="_blank"><i class="fab fa-github"></i></a>
+            <a href="https://www.linkedin.com/in/yuhang-song-5727b9195" title="LinkedIn" rel="external nofollow noopener" target="_blank"><i class="fab fa-linkedin"></i></a>
+            
+
+        </div>
+      </div>
+    </footer>
+
+
+    <!-- JavaScripts -->
+    <!-- jQuery -->
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <!-- Bootsrap & MDB scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha256-fgLAgv7fyCGopR/gBNq2iW3ZKIdqIcyshnUULC4vex8=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mdbootstrap@4.20.0/js/mdb.min.js" integrity="sha256-NdbiivsvWt7VYCt6hYNT3h/th9vSTL4EDWeGs5SN3DA=" crossorigin="anonymous"></script>
+
+    <!-- Masonry & imagesLoaded -->
+  <script defer src="https://cdn.jsdelivr.net/npm/masonry-layout@4.2.2/dist/masonry.pkgd.min.js" integrity="sha256-Nn1q/fx0H7SNLZMQ5Hw5JLaTRZp0yILA/FRexe19VdI=" crossorigin="anonymous"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/imagesloaded@4/imagesloaded.pkgd.min.js"></script>
+  <script defer src="/assets/js/masonry.js" type="text/javascript"></script>
+    
+  <!-- Medium Zoom JS -->
+  <script defer src="https://cdn.jsdelivr.net/npm/medium-zoom@1.0.8/dist/medium-zoom.min.js" integrity="sha256-7PhEpEWEW0XXQ0k6kQrPKwuoIomz8R8IYyuU1Qew4P8=" crossorigin="anonymous"></script>
+  <script defer src="/assets/js/zoom.js"></script>
+  <!-- Sidebar Table of Contents -->
+  <script defer src="https://cdn.rawgit.com/afeld/bootstrap-toc/v1.0.1/dist/bootstrap-toc.min.js"></script>
+
+
+  <!-- Bootstrap Table -->
+  <script defer src="https://unpkg.com/bootstrap-table@1.21.4/dist/bootstrap-table.min.js"></script>
+
+  <!-- Load Common JS -->
+  <script src="/assets/js/no_defer.js"></script>
+  <script defer src="/assets/js/common.js"></script>
+  <script defer src="/assets/js/copy_code.js" type="text/javascript"></script>
+
+    
+  <script async src="https://d1bxh8uas1mnw7.cloudfront.net/assets/embed.js"></script>
+  <script async src="https://badge.dimensions.ai/badge.js"></script>
+
+	    <!-- MathJax -->
+  <script type="text/javascript">
+    window.MathJax = {
+      tex: {
+        tags: 'ams'
+      }
+    };
+  </script>
+  <script defer type="text/javascript" id="MathJax-script" src="https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js"></script>
+
+	    
+	    
+
+	    <script src="/assets/js/list_pagination.js"></script>
+	  </body>
+	</html>
