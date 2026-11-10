@@ -2046,4 +2046,70 @@ nav[data-toggle=toc] .nav-link.active {
   border-left-color: var(--global-theme-color);
 }
 
+/* Handwritten formula background (projects and blog pages) -------------------*/
+body > .container {
+  position: relative;
+  z-index: 0;
+}
+
+.site-footer {
+  position: relative;
+  z-index: 1;
+}
+
+.formula-bg {
+  --fbg-opacity: 0.22;
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  color: var(--global-text-color);
+  opacity: var(--fbg-opacity);
+  font-family: "Mynerve", cursive;
+  transition: opacity 2.5s ease;
+}
+.formula-bg.is-fading {
+  opacity: 0;
+}
+.formula-bg svg {
+  position: absolute; /* placed per cluster by formula_bg.js */
+  height: auto;
+  overflow: visible;
+}
+.formula-bg text {
+  fill: currentColor;
+}
+.formula-bg text.title {
+  fill: var(--global-theme-color);
+}
+.formula-bg text.zh {
+  font-family: "Ma Shan Zheng", "KaiTi", "STKaiti", serif;
+}
+.formula-bg path {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.formula-bg path.acc {
+  stroke: var(--global-theme-color);
+}
+
+html[data-theme=dark] .formula-bg {
+  --fbg-opacity: 0.26;
+}
+
+/* narrower screens: more of each cluster sits behind the content */
+@media (max-width: 1199px) {
+  .formula-bg, html[data-theme=dark] .formula-bg {
+    --fbg-opacity: 0.16;
+  }
+}
+@media (max-width: 767px) {
+  .formula-bg {
+    display: none;
+  }
+}
+
 /*# sourceMappingURL=main.css.map */
