@@ -1,6 +1,6 @@
 ---
 layout: page
-title: "crp Humanoid: From Motion Tracking to Steady Walking"
+title: "Supermimic on CRP Humanoid"
 description: Taking our in-house humanoid crp from dancing in simulation to walking on a gamepad and playing motions at the press of a button, with world-model policy learning from SuperMimic.
 img: assets/img/crp/cover.jpg
 importance: -2
