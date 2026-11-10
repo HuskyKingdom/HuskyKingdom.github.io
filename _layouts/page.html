@@ -2,6 +2,7 @@
 layout: default
 ---
 <!-- page.html -->
+        {%- if page.formula_bg %}{% include formula_bg.html set=page.formula_bg %}{% endif %}
         <div class="post page-shell page-{{ page.title | slugify }}">
 
           <header class="post-header">

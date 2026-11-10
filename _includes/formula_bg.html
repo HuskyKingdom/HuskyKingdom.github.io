@@ -1,0 +1,7 @@
+{%- assign fbg_set = include.set | default: "projects" -%}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Mynerve&display=swap">
+{%- if fbg_set == "blog" %}
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ma+Shan+Zheng&text=%E7%99%BD%E4%BA%91%E8%8B%8D%E7%8B%97%E5%9B%9B%E5%AD%A3%E6%9E%AF%E8%8D%A3&display=swap">
+{%- endif %}
+<div class="formula-bg" data-set="{{ fbg_set }}" aria-hidden="true"></div>
+<script defer src="{{ '/assets/js/formula_bg.js' | relative_url }}"></script>

@@ -7,6 +7,7 @@ nav: true
 nav_order: 2
 display_categories: [Research, Industrial]
 horizontal: false
+formula_bg: projects
 ---
 
 <!-- pages/projects.md -->
